@@ -1,0 +1,97 @@
+\documentclass{article}
+\usepackage{float}
+
+
+\title{CSCI447: Analysis of Traditional Machine-Learning Algorithms on Real-World Data.}
+\author{Christopher R. Barbour, John Sherrill, Brandon Fenton}
+
+\date{\today}
+
+ %% LaTeX margin settings:
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{10.05in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0cm}
+\setlength{\hoffset}{0cm}
+\setlength{\voffset}{-1in}
+
+ %% tell knitr to use smaller font for code chunks
+\ifdefined\knitrout
+\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
+ \else
+\fi
+\newcommand{\R}{{\sf R}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfD}{\mbox{\boldmath $D$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfI}{\mbox{\boldmath $I$}}
+\newcommand{\bfX}{\mbox{\boldmath $X$}}
+
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfz}{\mbox{\boldmath $z$}}
+\newcommand{\bfsigma}{\mbox{\boldmath $\Sigma$}}
+
+\newcommand{\rpm}{\raisebox{.2ex}{$\scriptstyle\pm$}}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.width=6.5, fig.height=5, out.width='\\linewidth', dev='pdf', concordance=TRUE)
+options(replace.assign=TRUE,width=112, digits = 3, max.print="140",
+        show.signif.stars = FALSE)
+setwd("C:/Users/barbourcr/Documents/CSCI447/Project1/writeup")
+@
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\abstract{Hello, this is our abstractjfslfksjlfksdjflksdj lskjdfsljf;asdkfja;lkdjfl slkdfj;aksdjflksdjf a;sldkjfalskdfja;kljdf a;lksdjf;aklsjdfl ksjd.}
+\end{center}
+
+\tableofcontents
+
+\section{Introduction}
+
+The purpose of this study is to assess the classification performance of 10 machine-learning algorithms on 10 datasets from the UCI repository of machine-learning datasets. The algorithms, listed in section 2.1, cover a broad spectrum of classification techniques with varying degrees of assumptions, computational intensity, and inductive biases. The latter of these will be the focus on our performance hypothesis of each dataset and interpretation of results.
+
+\section{Experimental Design}
+
+For each of the selected datasets and algorithms, we will randomly partition the examples into a training dataset which will be used to construct the classifier and a test dataset which will be used to test the classifiers ability to generalize, or correctly classify similar examples from the same population of interest. Each algorithm will be heuristically tuned to each dataset prior to the experiment using a single run 10-fold Cross-validation. The measures used to quantify this classification ability will be one minus the misclassification rate, the weighted average F-measure, and the weighted average Area under the ROC curve. These measures were chosen to assess different capabilities of each algorithm. Misclassification rate measures.... . Weighted Average F-measure related to .... . Weighted Average Area under the ROC assess.... . 
+
+\subsection{Datasets}
+
+The datasets selected were chosen to contain a classification problem, be free of missing attributes or classes, and be of somewhat interest to the authors. Prior to the experiment, variables with each example having a unique value (i.e. a sample identification, or name of an animal) was removed. Table 1 displays the name of our datasets with brief descriptions, the types of attributes present, the number of classes for prediction, and the number of total examples. 
+
+\subsection{Algorithm Descriptions}
+
+The algorithms implemented in the experiment are displayed below in Table 2. As stated earlier, individual tuning to each dataset was done prior to the experiment, and these results are displayed in the supplementary information. Some options remained fixed during all of the experiment, and these are discussed below along with certain examples of how tuning was performed.
+
+For Naive Bayes estimation.. . For K nearest-neighbors..... For AdaboostM1.... For Ripper K.... For decision trees.... For the Feed-Forward Neural Network... For the Kernel Neural Network....
+
+\subsection{Hypothesis}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{References}
+
+\begin{center}
+  {\large\bf Supplementary Information}
+\end{center}
+
+\begin{center}
+  {\large\bf Tuning Parameter Information}
+\end{center}
+
+\begin{center}
+  {\large\bf Supplemental Plots of Results}
+\end{center}
+
+<<ref.label='one',echo=TRUE,eval=FALSE,cache=TRUE>>=
+@
+
+\end{document}
