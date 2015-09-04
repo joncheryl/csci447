@@ -1,37 +1,33 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 25 09:34:59 2015
-
-"""
+###
+### Still need to add an input for take different files
+###
 
 import pandas as pd
 import numpy as np
-import os
 
-# Set some Pandas options
-pd.set_option('html', False)
-pd.set_option('max_columns', 30)
-pd.set_option('max_rows', 20)
+data = pd.read_csv("car.data", header=-1)
 
-os.chdir("/home/ds0/School/Fall 15/CSCI 447 Machine Learning and Soft Computing/Project 1/")
-data = pd.read_csv("abalone.data", low_memory=False)
-
-name = "abalone.data".split(".")
+name = "car.data".split(".")
 arff = open(name[0]+".arff",'w')
 
 arff.write("@RELATION " + name[0] + "\n\n")
 
-for data_ix in range(0,len(data.columns)):
-    if data.iloc[:,data_ix].dtype.char == 'd' or data.iloc[:,data_ix].dtype.char == 'l':
-        data_col = "NUMERIC"
+for col in range(0,len(data.columns)):
+
+    if data.dtypes[col].kind == 'O':
+        levels = pd.unique(data[col])
+        levels.shape = (len(levels), 1)
+        levels = levels.T
+
+        arff.write("@ATTRIBUTE " + "feature_" + str(col) + " " + "{")
+        np.savetxt(arff, levels, delimiter = ', ', fmt = '%s', newline = '')
+        arff.write("}\n")
+
     else:
-        data_col = "{" + ",".join(unique(data.iloc[:,data_ix])) + "}"
-        
-    arff.write("@ATTRIBUTE " + "feature_" + str(data_ix) + " " + data_col + "\n")
-    
+        data_col = "NUMERIC"
+
 arff.write("\n@DATA\n")
 
-for row in range(0,len(data)):
-    arff.write(", ".join(str(x) for x in data.ix[row,]) + "\n")
+np.savetxt(arff, data, delimiter = ', ', fmt = '%s')
 
 arff.close()
