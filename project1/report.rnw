@@ -47,7 +47,7 @@ options(replace.assign=TRUE,width=112, digits = 3, max.print="140",
 \maketitle
 
 \begin{center}
-\abstract{Hello, this is our abstractjfslfksjlfksdjflksdj lskjdfsljf;asdkfja;lkdjfl slkdfj;aksdjflksdjf a;sldkjfalskdfja;kljdf a;lksdjf;aklsjdfl ksjd.}
+\abstract{Hello, this is our abstract.}
 \end{center}
 
 \tableofcontents
@@ -58,7 +58,7 @@ The purpose of this study is to assess the classification performance of 10 mach
 
 \section{Experimental Design}
 
-For each of the selected datasets and algorithms, we will randomly partition the examples into a training dataset which will be used to construct the classifier and a test dataset which will be used to test the classifiers ability to generalize, or correctly classify similar examples from the same population of interest. Each algorithm will be heuristically tuned to each dataset prior to the experiment using a single run 10-fold Cross-validation. The measures used to quantify this classification ability will be one minus the misclassification rate, the weighted average F-measure, and the weighted average Area under the ROC curve. These measures were chosen to assess different capabilities of each algorithm. Misclassification rate measures.... . Weighted Average F-measure related to .... . Weighted Average Area under the ROC assess.... . 
+For each of the selected datasets and algorithms, we will randomly partition the examples into a training dataset which will be used to construct the classifier and a test dataset which will be used to test the classifiers ability to generalize, or correctly classify similar examples from the same population of interest. The training set will be approximately 2/3 of the dataset and the training set will be approximately 1/3 of the dataset. 100 repetitions will be performed to obtain distributions for the three loss functions chosen for algorithm performance analysis. Each algorithm will be heuristically tuned to each dataset prior to the experiment using a single run 10-fold Cross-validation. The measures used to quantify this classification ability will be one minus the misclassification rate, the weighted average F-measure, and the weighted average Area under the ROC curve. These measures were chosen to assess different capabilities of each algorithm. Misclassification rate measures.... . Weighted Average F-measure related to .... . Weighted Average Area under the ROC assess.... . 
 
 \subsection{Datasets}
 
@@ -107,9 +107,26 @@ Inductive biases include: starting point for gradient descent optimization, requ
 Reference?
 
 \subsubsection{Kernel neural network (RBFNetwork)}
+
+An RBF Network is essentially a neural network with that uses radial basis functions as the activation function for neurons.
+
+Broomhead, D. S.; Lowe, David (1988). Radial basis functions, multi-variable functional interpolation and adaptive networks (Technical report). RSRE. 4148.
+
 \subsubsection{Ensemble (Adaboost)}
 
 \subsection{Hypothesis}
+Which algorithm do we think will work best with each dataset. There are natural coparisons between certain algorithms (e.g. JRip and C4.5).
+
+\subsubsection{Abalone}
+\subsubsection{Car Evaluation}
+\subsubsection{Contraceptive Method}
+\subsubsection{Ecoli}
+\subsubsection{Flag}
+\subsubsection{Tic Tac Toe}
+\subsubsection{Wine}
+\subsubsection{Wine Quality}
+\subsubsection{Yeast}
+\subsubsection{Zoo}
 
 \section{Results}
 
