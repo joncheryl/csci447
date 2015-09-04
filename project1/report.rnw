@@ -3,7 +3,7 @@
 
 
 \title{CSCI447: Analysis of Traditional Machine-Learning Algorithms on Real-World Data.}
-\author{Christopher R. Barbour, John Sherrill, Brandon Fenton}
+\author{Christopher R. Barbour, Brandon Fenton, John Sherrill}
 
 \date{\today}
 
@@ -40,7 +40,6 @@
 opts_chunk$set(fig.width=6.5, fig.height=5, out.width='\\linewidth', dev='pdf', concordance=TRUE)
 options(replace.assign=TRUE,width=112, digits = 3, max.print="140",
         show.signif.stars = FALSE)
-setwd("C:/Users/barbourcr/Documents/CSCI447/Project1/writeup")
 @
 
 \begin{document}
@@ -69,7 +68,46 @@ The datasets selected were chosen to contain a classification problem, be free o
 
 The algorithms implemented in the experiment are displayed below in Table 2. As stated earlier, individual tuning to each dataset was done prior to the experiment, and these results are displayed in the supplementary information. Some options remained fixed during all of the experiment, and these are discussed below along with certain examples of how tuning was performed.
 
-For Naive Bayes estimation.. . For K nearest-neighbors..... For AdaboostM1.... For Ripper K.... For decision trees.... For the Feed-Forward Neural Network... For the Kernel Neural Network....
+\subsubsection{Simple nearest neighbor (IB1)}
+
+These algorithms classify instances by way of referencing a set $X$ of classified instances. For a given instance $x$ of unknown class, the algorithm searches $X$ for an element $y$ that most closely resembles $x$ in attribute. Various metrics may be used for defining ``resemblance''. The class of $x$ is then deteremined to be the class of $y$.
+
+Inductive biases: assuming that points close together are alike.
+
+Reference.
+
+\subsubsection{$K$-nearest neighbor (IBk)}
+
+This is a generalization of the simple nearest neighbor algorithms. For instance $x$ to be classified, the $K$-nearest neighbor algorithm searches a reference set $X$ for the $K$ elements most closely resembling $x$ (again, this is dependent upon the metric choice). The class of $x$ is given by the most frequent class of the $K$ elements found.
+
+Inductive biases: assuming that points close together are alike.
+
+Reference.
+
+\subsubsection{Naive Bayes}
+\subsubsection{Logistic regression}
+\subsubsection{Decision tree (J48)}
+
+These algorithms classify instances by forming a cascading decision making mechanism in the form of a ``descision tree''. The tree is constructed such that attributes found to carry more information about the class of the instances are used earlier in the mechanism than those attributes found to carry less information. 
+
+J48 is an open source Java implementation of Quinlan's C4.5 algorithm. The reference for that particular flavor of Decision tree algorithms is Quinlan, J. R. C4.5: Programs for Machine Learning. Morgan Kaufmann Publishers, 1993.
+
+Inductive biases may include: a preference for shorter trees, trees that place high information gain attributes close to the root are preferred over those that do not, selection of the first functioning tree (the learning algorithm is a greedy algorithm). Linear separability of domain (reference for this statement?)
+
+\subsubsection{Ripper (JRip)}
+\subsubsection{Support vector machine (LibSVM or SMO)}
+\subsubsection{Feedforward neural networks (Multilayer Perceptron)}
+
+These algorithms classify instances by forming a directed graph that contains no cycles, that is, the information passes through the constructed network in a forward only direction. The graph consists of connected nodes (neurons) that either engage or don't based upon signals presented to them from other neurons upstream. The signals are added in a weighted manner and the neuron fires if a specified threshold is met.
+
+Back-propagation is the most common learning method for multi-layer perceptrons. Neurons feed other neurons by manner of weights and ideal weights are found by utilizing gradient descent on a specified loss function where the loss function is minimized over the space of possible weights.
+
+Inductive biases include: starting point for gradient descent optimization, require linear separability of domain.
+
+Reference?
+
+\subsubsection{Kernel neural network (RBFNetwork)}
+\subsubsection{Ensemble (Adaboost)}
 
 \subsection{Hypothesis}
 
