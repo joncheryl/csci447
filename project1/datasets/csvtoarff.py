@@ -17,17 +17,20 @@ arff.write("@RELATION " + name[0] + "\n\n")
 
 for col in range(0,len(data.columns)):
 
-    if data.dtypes[col].kind == 'O':
+    arff.write("@ATTRIBUTE " + "feature_" + str(col) + " ")
+
+    # if clearly an object or less than 10 levels
+    if data.dtypes[col].kind == 'O' or len(pd.unique(data[col])) < 10:
         levels = pd.unique(data[col])
         levels.shape = (len(levels), 1)
         levels = levels.T
 
-        arff.write("@ATTRIBUTE " + "feature_" + str(col) + " " + "{")
+        arff.write("{")
         np.savetxt(arff, levels, delimiter = ', ', fmt = '%s', newline = '')
         arff.write("}\n")
 
     else:
-        data_col = "NUMERIC"
+        arff.write("NUMERIC\n")
 
 arff.write("\n@DATA\n")
 
