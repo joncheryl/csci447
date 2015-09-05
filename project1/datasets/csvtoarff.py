@@ -4,10 +4,13 @@
 
 import pandas as pd
 import numpy as np
+import sys
 
-data = pd.read_csv("car.data", header=-1)
+file = sys.argv[1]
+    
+data = pd.read_csv(file, header=-1)
 
-name = "car.data".split(".")
+name = file.split(".")
 arff = open(name[0]+".arff",'w')
 
 arff.write("@RELATION " + name[0] + "\n\n")
