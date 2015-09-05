@@ -1,5 +1,5 @@
 ###
-### Still need to add an input for take different files
+### for f in *; do python csvtoarff.py $f; done
 ###
 
 import pandas as pd
