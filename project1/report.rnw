@@ -74,15 +74,15 @@ These algorithms classify instances by way of referencing a set $X$ of classifie
 
 Inductive biases: assuming that points close together are alike.
 
-Reference.
-
 \subsubsection{$K$-nearest neighbor (IBk)}
 
 This is a generalization of the simple nearest neighbor algorithms. For instance $x$ to be classified, the $K$-nearest neighbor algorithm searches a reference set $X$ for the $K$ elements most closely resembling $x$ (again, this is dependent upon the metric choice). The class of $x$ is given by the most frequent class of the $K$ elements found.
 
 Inductive biases: assuming that points close together are alike.
 
-Reference.
+First developed in 1951 by Fix and Hodges.
+
+Nearest Neighbor Search:: A Database Perspective. Apostolos N. Papadopoulos. 2005.
 
 \subsubsection{Naive Bayes}
 \subsubsection{Logistic regression}
@@ -104,7 +104,7 @@ Back-propagation is the most common learning method for multi-layer perceptrons.
 
 Inductive biases include: starting point for gradient descent optimization, require linear separability of domain.
 
-Reference?
+Pattern Recognition and Image Preprocessing. Sing T. Bow. 2002.
 
 \subsubsection{Kernel neural network (RBFNetwork)}
 
@@ -117,16 +117,25 @@ Broomhead, D. S.; Lowe, David (1988). Radial basis functions, multi-variable fun
 \subsection{Hypothesis}
 Which algorithm do we think will work best with each dataset. There are natural coparisons between certain algorithms (e.g. JRip and C4.5).
 
-\subsubsection{Abalone}
-\subsubsection{Car Evaluation}
-\subsubsection{Contraceptive Method}
-\subsubsection{Ecoli}
-\subsubsection{Flag}
-\subsubsection{Tic Tac Toe}
-\subsubsection{Wine}
-\subsubsection{Wine Quality}
-\subsubsection{Yeast}
-\subsubsection{Zoo}
+\subsubsection{Abalone} I would think the nearest neighboor algorithms would perform well, as instances with predictors 'close together' (in a metric sense) would likely be related. SVM I would think would perform well for the same reasons. 
+
+\subsubsection{Car Evaluation} This is faked data, 'derived from a simple hierarchical decision model' and I would think algorithms that model hierarchies in some regard would perform well (e.g. hierarchical decision trees, feed-forward neural networks, Ripper). I would think that learners are 'metric' oriented would perform poorly as closely spaced instances could more likely be classified differencely.
+
+\subsubsection{Contraceptive Method} I believe decision trees will work well because I imagine there are a few features that are far more important than the others (wife's education, number of children ever born, religion). I don't think SVMs will work well because intuitively it doesn't seem like there would be very distict groups (three distict groups for this data set in particular) to classify.
+
+\subsubsection{Ecoli} I have absolutely no idea what type of learner would perform well with this data. I'd put all my money on either a naive bayes learner or the boosting methods.
+
+\subsubsection{Flag} I would think that a naive bayes learner would not perform well because conditional independence seems to be fairly strongly violated with some of the color features. Maybe SVM or nearest neighbor will work well simply because we're trying to classify the continent feature.
+
+\subsubsection{Tic Tac Toe} Again, one feature leads to another so I would go with decision trees.
+
+\subsubsection{Wine} It looks like some of the features are missing so perhaps SVMs and tree oriented learning will not perform well. Mabybe naive bayes/logistic regression will work well. Independence may be an acceptible assumption for this data.
+
+\subsubsection{Wine Quality} Since quality is determined by human taste, I think that neural networks will work well simply because those learners seek to model rudementary cognative function. I do not think SVMs, naive bayes, or logistic regression will work well. Linear seperability will be an issue, there will be much noise, and classes will not be sepereated by wide margins... I imagine.
+
+\subsubsection{Yeast} No idea so I'm going with Adaboost.
+
+\subsubsection{Zoo} Decision trees will mostly likely perform the best here (J48 but JRip as well) because heirarchical modeling is the definition of what is being classed. As long as all the relevant features are included in the dataset, which appears to be the case, then these will perform well. I don't think naive bayes will work well as independence is clearly violated (it's a safe bet that if you have wings, you don't have gills).
 
 \section{Results}
 
