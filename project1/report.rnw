@@ -1,42 +1,12 @@
 \documentclass{article}
-\usepackage{float}
+\usepackage{fullpage, amsfonts}
 
-
-\title{CSCI447: Analysis of Traditional Machine-Learning Algorithms on Real-World Data.}
+\title{CSCI447: Analysis of Traditional Machine-Learning Algorithms}
 \author{Christopher R. Barbour, Brandon Fenton, John Sherrill}
 
 \date{\today}
 
- %% LaTeX margin settings:
-\setlength{\textwidth}{6.5in}
-\setlength{\textheight}{10.05in}
-\setlength{\oddsidemargin}{0in}
-\setlength{\evensidemargin}{0in}
-\setlength{\topmargin}{0cm}
-\setlength{\hoffset}{0cm}
-\setlength{\voffset}{-1in}
-
- %% tell knitr to use smaller font for code chunks
-\ifdefined\knitrout
-\renewenvironment{knitrout}{\begin{footnotesize}}{\end{footnotesize}}
- \else
-\fi
-\newcommand{\R}{{\sf R}}
-\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
-\newcommand{\bfD}{\mbox{\boldmath $D$}}
-\newcommand{\bfR}{\mbox{\boldmath $R$}}
-\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
-\newcommand{\bfI}{\mbox{\boldmath $I$}}
-\newcommand{\bfX}{\mbox{\boldmath $X$}}
-
-\newcommand{\bfy}{\mbox{\boldmath $y$}}
-\newcommand{\bfz}{\mbox{\boldmath $z$}}
-\newcommand{\bfsigma}{\mbox{\boldmath $\Sigma$}}
-
-\newcommand{\rpm}{\raisebox{.2ex}{$\scriptstyle\pm$}}
-
 <<setup, include=FALSE, cache=FALSE>>=
-# this is equivalent to \SweaveOpts{...}
 opts_chunk$set(fig.width=6.5, fig.height=5, out.width='\\linewidth', dev='pdf', concordance=TRUE)
 options(replace.assign=TRUE,width=112, digits = 3, max.print="140",
         show.signif.stars = FALSE)
@@ -50,52 +20,76 @@ options(replace.assign=TRUE,width=112, digits = 3, max.print="140",
 \abstract{Hello, this is our abstract.}
 \end{center}
 
-\tableofcontents
-
 \section{Introduction}
 
-The purpose of this study is to assess the classification performance of 10 machine-learning algorithms on 10 datasets from the UCI repository of machine-learning datasets. The algorithms, listed in section 2.1, cover a broad spectrum of classification techniques with varying degrees of assumptions, computational intensity, and inductive biases. The latter of these will be the focus on our performance hypothesis of each dataset and interpretation of results.
+The purpose of this study is to assess the classification performance of 10 machine-learning algorithms on 10 datasets from the UCI Machine Learning Repository. The algorithms, described in Section \ref{algorithms}, cover a broad spectrum of classification techniques with varying degrees of computational intensity and  inductive bias. The latter of which will be the focus of the performance hypothesis for each dataset and of the interpretation of results.
 
 \section{Experimental Design}
+For each of the selected datasets and algorithms, we will randomly partition the examples into a training dataset which will be used to construct the classifier and a test dataset which will be used to test the classifier's ability to generalize, i.e. correctly classify similar examples from the same population of interest. Each algorithm will be heuristically tuned to each dataset prior to the experiment using a single run 10-fold cross-validation scheme.
 
-For each of the selected datasets and algorithms, we will randomly partition the examples into a training dataset which will be used to construct the classifier and a test dataset which will be used to test the classifiers ability to generalize, or correctly classify similar examples from the same population of interest. The training set will be approximately 2/3 of the dataset and the training set will be approximately 1/3 of the dataset. 100 repetitions will be performed to obtain distributions for the three loss functions chosen for algorithm performance analysis. Each algorithm will be heuristically tuned to each dataset prior to the experiment using a single run 10-fold Cross-validation. The measures used to quantify this classification ability will be one minus the misclassification rate, the weighted average F-measure, and the weighted average Area under the ROC curve. These measures were chosen to assess different capabilities of each algorithm. Misclassification rate measures.... . Weighted Average F-measure related to .... . Weighted Average Area under the ROC assess.... . 
+Three measures were chosen to assess different capabilities of each algorithm:
+\begin{enumerate}
+  \item weighted average F-measure: The F-measure for a given class is a function of the precision and recall of a test (the harmonic mean of the precision and recall). The weighted average F-measure is the sum of the F-measures for all the classes in the data weighted by the sample sizes of the examples \textbf{(instances?)} in each class.
+    
+  \item one minus the misclassification rate: Misclassification rates measure the proportion of incorrectly classified observations, so one minus this quantity represents the proportion of correctly classified observations. 
+    
+  \item weighted average Area Under the ROC curve: For a given class, area under the ROC (AUROC) assesses the classifier's sensitivity (probability of predicting the correct class, also referred to as precision) and specificity (probability of not predicting the incorrect class). The weighted AUROC is the sum of the AUROCs over the classes in the data weighted by the sample sizes of the observations \textbf{(number of instances in each class?)}.
+\end{enumerate}
 
 \subsection{Datasets}
-
-The datasets selected were chosen to contain a classification problem, be free of missing attributes or classes, and be of somewhat interest to the authors. Prior to the experiment, variables with each example having a unique value (i.e. a sample identification, or name of an animal) was removed. Table 1 displays the name of our datasets with brief descriptions, the types of attributes present, the number of classes for prediction, and the number of total examples. 
+Ten datasets were obtained from the UCI Machine Learning Repository (Lichman 2013) \textbf{(need to organize references)}. Features found to have unique values for each instance (e.g. identification numbers or the name of an animal) were removed. \textbf{Not sure if we should include this:} Table 1 displays the name of our datasets with brief descriptions, the types of attributes present, the number of classes for prediction, and the number of total examples.
 
 \subsection{Algorithm Descriptions}
+\label{algorithms}
 
-The algorithms implemented in the experiment are displayed below in Table 2. As stated earlier, individual tuning to each dataset was done prior to the experiment, and these results are displayed in the supplementary information. Some options remained fixed during all of the experiment, and these are discussed below along with certain examples of how tuning was performed.
 
-\subsubsection{Simple nearest neighbor (IB1)}
+\subsubsection{Instance-Based Methods (IB1 and IB$k$)}
 
-These algorithms classify instances by way of referencing a set $X$ of classified instances. For a given instance $x$ of unknown class, the algorithm searches $X$ for an element $y$ that most closely resembles $x$ in attribute. Various metrics may be used for defining ``resemblance''. The class of $x$ is then deteremined to be the class of $y$.
+The nearest neighbor algorithm \cite{Aha1991} classifies instances by way of referencing a set $X$ of pre-classified instances. For a given instance $x$ of unknown class, the algorithm searches $X$ for an element $y$ that most closely resembles $x$ in attribute. Various metrics may be used for defining ``resemblance'' although Euclidean distance is most often used. The class of $x$ is then deteremined to be the class of $y$.
 
-Inductive biases: assuming that points close together are alike.
+The $k$-Nearest Neighbor ($k$-NN) classifier is a generalization of the simple nearest neighbor algorithm. For instance $x$ to be classified, the $k$-NN algorithm searches a reference set $X$ for the $k \in \mathbb{N}$ elements most closely resembling $x$. The class of $x$ is assigned as be the most frequent class of the $k$ elements inspected. Modifications to this algorithm include weighting the neighbors based on proximity to the instance being classified, as well as a Parzen windows implementation. We chose to tune this algorithm in the cross-validation tuning procedure over the possible combinations of $k \in \{3, \ldots, 8\}$ and whether to use no distance weighting or the reciprocal of distance as the weighting. We did not utilize the Parzen windows option.
 
-\subsubsection{$K$-nearest neighbor (IBk)}
-
-This is a generalization of the simple nearest neighbor algorithms. For instance $x$ to be classified, the $K$-nearest neighbor algorithm searches a reference set $X$ for the $K$ elements most closely resembling $x$ (again, this is dependent upon the metric choice). The class of $x$ is given by the most frequent class of the $K$ elements found.
-
-Inductive biases: assuming that points close together are alike.
-
-First developed in 1951 by Fix and Hodges.
-
-Nearest Neighbor Search:: A Database Perspective. Apostolos N. Papadopoulos. 2005.
+The inductive bias of these instance-based methods lies in the assumption that observations that are close to one another are similar in there class assignment.
 
 \subsubsection{Naive Bayes}
-\subsubsection{Logistic regression}
-\subsubsection{Decision tree (J48)}
+Naive Bayes estimation \cite{John1995} assumes conditional independence of the covariates conditioned on the class and applies Bayes rule to get the maximum class probability conditioned on the covariates. 
 
-These algorithms classify instances by forming a cascading decision making mechanism in the form of a ``descision tree''. The tree is constructed such that attributes found to carry more information about the class of the instances are used earlier in the mechanism than those attributes found to carry less information. 
+For categorical predictors, we can simply estimate the probability of X conditioned on C is simply the number of examples that have both predictor X and class C divided by the total examples in class C. However, this can result in a probability of 0 if there are no examples in class C with covariate Xi, so we typically assume a dirichlet prior on the distribution on the classes and produce a maximum a posterior (MAP) estimator, which effectively "smooth" these probabilities away from 0. The estimated probability of class C is simply the total number of examples in class C divided by the total number of examples in the data. For continuous input, we can either assume that $X_i$ conditioned on class $C_i$ is a Gaussian random variable and use probability theory to estimate the conditional mean and variance, or we can use a kernel density estimation instead. This reference show that kernel estimation can improve prediction performance when covariates are not conditionally Gaussian and does not hinder performance much when they are. Therefore, we will use kernel density estimation in our computations involving continuous predictors. 
+
+The inductive bias of naive bayes estimators is that the classes are linearly separable and that preditors are conditional independent which is often violated in practice.
+
+\subsubsection{Logistic Regression with Regularization}
+
+Logistic regression (reference) is a form of generalized linear modeling, where we use a logit link function and assume a binomial (or more generally, a multinomial) likelihood. The parameters of logistic regression are estimated using a gradient ascent search method to maximize the conditional log-likelihood from the data. Since this is a gradient search method, it is possible to get stuck at a local maxima instead of the global maximum. This algorithm assumes linear separation of the groups, as well as independence of the covariates. Note: in practice we could attempt to model interaction and quadratic effects of covariates in order to  improve prediction performance. Since this option is not readily available in Weka, we will ignore this issue. We can also choose to maximize the log-likelihood plus a penalty, where the penalty corresponds to a constant multiplied by the squared $L_2$ norm of the model parameters. This corresponds to a "ridge" penalty and will have the effect of shrinking out unimportant parameters in the model. Ridge estimators have been shown to often improve predictive performance in the estimators (reference ). For the tuning procedure, the grid of values selected for $\lambda$, the ridge penalty, were 0.00001, 0.0001, 0.001, 0.01, 0.1, and 1.
+
+The inductive bias of the logistic regression algorithm comes from its assumption of linear seperability between the classes.
+
+\subsubsection{C4.5 Decision Tree (J48)} 
+
+Decision trees are a type of classifier that creates sets of rules to classify new examples. They begin by finding an initial split that maximally decreases the entropy gain ratio. 
+
+After the tree is constructed, it is typically pruned (for a fixed confidence factor, which we will call $c$).
+
+The inductive bias of decision trees lie in the prefernces for simpler trees versus complicated ones. Decision trees do not need linearly seperable groups in order to be succesful classifiers.
+
+john-These algorithms classify instances by forming a cascading decision making mechanism in the form of a ``descision tree''. The tree is constructed such that attributes found to carry more information about the class of the instances are used earlier in the mechanism than those attributes found to carry less information. 
 
 J48 is an open source Java implementation of Quinlan's C4.5 algorithm. The reference for that particular flavor of Decision tree algorithms is Quinlan, J. R. C4.5: Programs for Machine Learning. Morgan Kaufmann Publishers, 1993.
 
 Inductive biases may include: a preference for shorter trees, trees that place high information gain attributes close to the root are preferred over those that do not, selection of the first functioning tree (the learning algorithm is a greedy algorithm). Linear separability of domain (reference for this statement?)
 
-\subsubsection{Ripper (JRip)}
+\subsubsection{RIPPER (JRip)}
+The inductive bias of Ripper K is similar to that of Decision trees, we prefer shorter simpler rules rather than complicated ones. This method does not assume that the groups are linearly seperable. 
+
 \subsubsection{Support vector machine (LibSVM or SMO)}
+Support Vector classifiers attempt to find a plane (or hyperplane in more than 3 dimensions) that maximizes the margins separating the groups. Formally...
+
+In cases, where groups are not linearly seperable, a kernal transformation can be used to project the problem into a higher dimensional space where the classes are linearly seperable. 
+
+To generalize to 3 or more classes, support vector machines are constructed for each pairwise-class comparison, and the majority winner of each of the pairwise comparison is the class prediction for a new example. 
+
+The inductive bias of the support vector machine lies in the assumption that the classes are seperated by a margin (not necessarily in the original dimension).
+
 \subsubsection{Feedforward neural networks (Multilayer Perceptron)}
 
 These algorithms classify instances by forming a directed graph that contains no cycles, that is, the information passes through the constructed network in a forward only direction. The graph consists of connected nodes (neurons) that either engage or don't based upon signals presented to them from other neurons upstream. The signals are added in a weighted manner and the neuron fires if a specified threshold is met.
@@ -104,7 +98,8 @@ Back-propagation is the most common learning method for multi-layer perceptrons.
 
 Inductive biases include: starting point for gradient descent optimization, require linear separability of domain.
 
-Pattern Recognition and Image Preprocessing. Sing T. Bow. 2002.
+Backpropagation:
+D. E. Rumelhart, C. E. Hiton, and R. J. Williams. Nature 323, 533-536, 9 October 1986.
 
 \subsubsection{Kernel neural network (RBFNetwork)}
 
@@ -112,36 +107,148 @@ An RBF Network is essentially a neural network with that uses radial basis funct
 
 Broomhead, D. S.; Lowe, David (1988). Radial basis functions, multi-variable functional interpolation and adaptive networks (Technical report). RSRE. 4148.
 
-\subsubsection{Ensemble (Adaboost)}
+\subsubsection{Ensemble Algorithm (AdaboostM1)}
+
+AdaboostM1 is an algorithm built from an ensemble of classifiers. The algorithm is described in detail in ({\bf 2 references}). The general idea of boosting is that using an ensemble of different classifiers and taking a majority vote will often produce a more accurate classifier. At each iteration of the algorithm, larger weights $w_i$ are applied to observations who were incorrectly classified by the previous step. This effectively forces the algorithm to put more effort into classifying these observations. A boosting weight is computed at each step which quantifies how well each iteration classifies correctly. The final output takes a ``weighted-majority" vote to classify the observations. We selected J48 as our algorithm for boosting. We tuned the number of boosting iterations (using 10, 20, 30, and 40 iterations) and the pruning weights (weights of 0, 50, and 100). 
+
+The inductive bias of Adaboost comes from the assumption that a collection of classifiers will perform better than a single classifier, which could be false if we are creating a collection of poor performing classifiers. 
 
 \subsection{Hypothesis}
 Which algorithm do we think will work best with each dataset. There are natural coparisons between certain algorithms (e.g. JRip and C4.5).
 
-\subsubsection{Abalone} I would think the nearest neighboor algorithms would perform well, as instances with predictors 'close together' (in a metric sense) would likely be related. SVM I would think would perform well for the same reasons. 
+\subsubsection{Abalone}
+An initial plot of the abalone predictors yeilds a few peices of information. The first being that the covariates share much information with one another. When their is a lot of shared information in the predictors, some methods may have less stable solutions due to multicollinearity. The second peice is that this may not be a completely linearly seperable problem. The plots show fairly distinct separation between infants and adults, but their is not a clear distinction between the males and females. So the algorithms with a linearly seperable inductive bias may do well at separating infants form adults, but not as well from seperating among adults. Based on these observations, we predict that....x
 
-\subsubsection{Car Evaluation} This is faked data, 'derived from a simple hierarchical decision model' and I would think algorithms that model hierarchies in some regard would perform well (e.g. hierarchical decision trees, feed-forward neural networks, Ripper). I would think that learners are 'metric' oriented would perform poorly as closely spaced instances could more likely be classified differencely.
+Of course, we are only looking at the pairwise relationships in 2 dimensions, and their may be linear seperation in higher-dimensions.
 
-\subsubsection{Contraceptive Method} I believe decision trees will work well because I imagine there are a few features that are far more important than the others (wife's education, number of children ever born, religion). I don't think SVMs will work well because intuitively it doesn't seem like there would be very distict groups (three distict groups for this data set in particular) to classify.
+\subsubsection{Car Evaluation}
+\subsubsection{Contraceptive Method}
+\subsubsection{Ecoli}
 
-\subsubsection{Ecoli} I have absolutely no idea what type of learner would perform well with this data. I'd put all my money on either a naive bayes learner or the boosting methods.
+Initial plots of the ecoli data show that while groups can be visually distinugeshed in some dimensions, other are more problematic. We also have a relatively small amount of training data. The linearly separable assumption is more appropriate than the yeast dataset; we see distinct differences in some attributes across the different localization sites. We also have very few examples in some of the classes, making the classificaion of these to be difficult. Given that linear seperability does not seem feasible, we propose that IBk, J48, Ripper, and Adaboost will acheive the best performance amongst the candidates. Since boosting generally increases performance, we predict that his will performa the best among the candidates.
 
-\subsubsection{Flag} I would think that a naive bayes learner would not perform well because conditional independence seems to be fairly strongly violated with some of the color features. Maybe SVM or nearest neighbor will work well simply because we're trying to classify the continent feature.
+\subsubsection{Flag}
+\subsubsection{Tic Tac Toe}
+\subsubsection{Wine}
+\subsubsection{Wine Quality}
+\subsubsection{Yeast}
+Initial plots of the yeast data show that certain classes can be visually distingueshed in some of the dimensions. Although the linear seperable assumption does not seem to hold, it does appear that observations close to one another seem to have similar classes overall. Although it may not be as efficient as the instance based methods, they rule or tree based methods could potentially separate these groups if appropriately grown and pruned. We postulate that IBK will perform the best amongst the candidates, followed by J48, Ripper, and Adaboost. Since boosting generally performs better than a single instance of a classifier, we predict that the ensamble will have improved performance compard to a single decision tree. 
 
-\subsubsection{Tic Tac Toe} Again, one feature leads to another so I would go with decision trees.
+\subsubsection{Zoo}
+When examining the raw data, it seems that we would be able to perform well in this problem. Most of the classes that we are differentiating are almost completely separable in a handful of the attributes present. So it seems to reason that combining them together, we should be able to classify these groups very well. This is also some evidence of a linearly separable problem. Due to this, we hypothesize that our loss measures will be greatest overall for Naive Bayes, Logistic regression, and MultilayerPerceptron. Due to the relatively small amount of training data for this problem, we hypothesize that Naive Bayes will perform the best of these three. 
 
-\subsubsection{Wine} It looks like some of the features are missing so perhaps SVMs and tree oriented learning will not perform well. Mabybe naive bayes/logistic regression will work well. Independence may be an acceptible assumption for this data.
+\section{Tuning}
 
-\subsubsection{Wine Quality} Since quality is determined by human taste, I think that neural networks will work well simply because those learners seek to model rudementary cognative function. I do not think SVMs, naive bayes, or logistic regression will work well. Linear seperability will be an issue, there will be much noise, and classes will not be sepereated by wide margins... I imagine.
-
-\subsubsection{Yeast} No idea so I'm going with Adaboost.
-
-\subsubsection{Zoo} Decision trees will mostly likely perform the best here (J48 but JRip as well) because heirarchical modeling is the definition of what is being classed. As long as all the relevant features are included in the dataset, which appears to be the case, then these will perform well. I don't think naive bayes will work well as independence is clearly violated (it's a safe bet that if you have wings, you don't have gills).
+As stated earlier, individual tuning to each dataset was done prior to the experiment, and these results are displayed in the supplementary information \textbf{should this be included?}. For each dataset, the algorithms were tuned using a course grid of tuning parameters and 10-fold cross-validation, selecting the value which minimized the average root mean-squared error of prediction. Some options remained fixed during all of the experiment, and these are discussed below along with certain examples of how tuning was performed. Unless, otherwise stated, the options for the algorithms in Weka were set to the default setting.
 
 \section{Results}
+
+\subsection{Abalone}
+
+Since the abalone dataset was not used originally for classifying sex, it makes sense that all classifiers performated rather poolry. The clear winner across all threee measures was logistic regression. In terms of classification percentage, the differences between the algorithms were quite small. For the weighted F-measure, many of the algorithms performed similarly as well. It is interesting to note that the Multilater Perceptron had a very wide variability on this loss scale. The clearest differences in the algorithms are manifested in the weighted AUC measures, with Logistic and Multilayer Perceptron performing the best. Ripper and J48 performed similarly on this dataeset. We see a big increase in using IBk over IB1. Interstingly, Adaboost performed poorly compared to the other algorithms, so the ensemble of trees actually decreased the classification performance in this example.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/abalone_plot.png} 
+\end{figure}
+
+\subsection{Cars}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/car_plot.png} 
+\end{figure}
+
+\subsection{Contraceptive Use}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/cmc_plot.png} 
+\end{figure}
+
+\subsection{Ecoli}
+
+The algorithms performed better on the Ecoli dataset compared to the yeast dataset. We see overall higher classifications, F-measures, and AUROCs. We see that, once again, Logistic regression, Naive Bayes, and K nearest neighbors perform at the top of the list. We see a decrease in performance using the rule based methods and the ensamble. The wide variation in these measures could be a result of the overfitting occuring, or the methods inability to easily pick identify classes in linearly seperable problems, something that the top methods can do well.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/ecoli_plot.png} 
+\end{figure}
+
+\subsection{Flags}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/flag_plot.png} 
+\end{figure}
+
+\subsection{Tic-tac-toe}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/tictac_plot.png} 
+\end{figure}
+
+\subsection{Wine}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/wine_plot.png} 
+\end{figure}
+
+\subsection{Wine Quality}
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/quality_plot.png} 
+\end{figure}
+
+\subsection{Yeast}
+
+For misclassifcation rate and the Average F-measure, we see small differences between the algorithms, with IB1 performing noticably worse. An interesting result is noticed when examining Adaboost results. We see that Adaboost performs slightly worse than J48 in terms of misclassification rate and average F-measure, but performs slightly better in terms of the AUC. Two of the classes compose $60\%$ of the examples in this dataset, and when looking at individual runs of the algorithm, we see that they perform well at classifying these sites and poorly on the others. In terms of weighted AUC, we see the top performances come from Logistic regression, Naive Bayes, and MultilayerPerceptron, followed closely by the IBK and RBFNetworks.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/yeast_plot.png} 
+\end{figure}
+
+\subsection{Zoo}
+
+All algorithms performed quite well on the zoo dataset. This seems to follow our logic; given the amount of information present on the different species it seems reasonable that we would able to classify them into similar groups of species. The classificaiton rate and the weighted F-measure provide practically the same information, and we do not see much differences in the algorithms other than the slight decrease in performance using Ripper and J48, with J48 using performing slightly better. In the weighted AUC, it is not visually clear which algorithm performs best overall, although we see that IBK, NaiveBayes, Logistic, and MultilayerPerceptron all have a median value very close to 1. There was also good performance from RBFNetwork and SMO, but these algorithms had slightly more variation in the observed values, making them slightly less desirable than those stated earlier. The ensamble of trees in Adaboost generally performed slightly better than the single tree produced by J48.
+
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=18cm,height=8cm]{plots/zoo_plot.png} 
+\end{figure}
 
 \section{Discussion}
 
 \section{References}
+\begin{enumerate}
+
+\item Hastie, T., Tibshirani, R., Friedman, J. (2009) {\em The Elements of Statistical Learning: Data Mining, Inference, and Prediction.}. Springer.
+
+\item Kuhn, M., Johnson, K. (2013). {\em Applied Predictive Modeling}. Springer.
+
+\item Cohen, W. (1995)  ``Fast Effective Rule Induction". {\em Twelfth International Conference on Machine Learning.} 115-123.
+
+\item John, G., Langley, P. (1995). ``Estimating Continuous Distributions in Bayesian Classifiers". {\em Eleventh Conference on Uncertainty in Artificial Intelligence}. 338-345.
+
+\item le Cessie, S., van Houwelingen, J.C. (1992). ``Ridge Estimators in Logistic Regression." {\em Applied Statistics}. 41(1), 191-201.
+
+\item Aha, D., Kibler, D. (1991). ``Instance-based Learning Algorithms". {\em Machine Learning}. 6:37-66. 
+
+\item Freund, Y., Schapire, R. (1996). ``Experiments with a new boosting algorithm". {\em Thirteenth International Conference on Machine Learning}, 148-156.
+
+\item Warner, B., Misra, M. (1996). ``Understanding Neural Networks as Statistical Tools". {\em The American Statistician}. 50(4):284-293. 
+
+\item Lichman, M. (2013). {\em UCI Machine Learning Repository} [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. 
+
+\item D. Aha, D. Kibler (1991). ``Instance-based learning algorithms. Machine Learning.'' 6:37-66.
+
+\end{enumerate}
+
+\section{Appendices}
 
 \begin{center}
   {\large\bf Supplementary Information}
@@ -157,5 +264,15 @@ Which algorithm do we think will work best with each dataset. There are natural 
 
 <<ref.label='one',echo=TRUE,eval=FALSE,cache=TRUE>>=
 @
+
+\begin{thebibliography}{99}
+  
+\bibitem{Aha1991}
+D. Aha, D. Kibler (1991). ``Instance-based Learning Algorithms.'' \emph{Machine Learning}. 6:37-66.
+   
+\bibitem{John1995}
+George H. John, Pat Langley (1995). ``Estimating Continuous Distributions in Bayesian Classifiers.'' Eleventh Conference on Uncertainty in Artificial Intelligence, San Mateo, 338-345.
+
+\end{thebibliography}
 
 \end{document}
