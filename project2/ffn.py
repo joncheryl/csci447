@@ -1,5 +1,7 @@
-""" Gonna start with a three layer network and try and feed stuff through
-at first
+""" 
+1) need to add bias nodes
+2) make a little test data
+3) get backprop working a) first propogate errors back
 """
 
 import numpy as np
