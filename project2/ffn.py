@@ -1,5 +1,4 @@
 """ 
-1) need to add bias nodes
 2) make a little test data
 3) get backprop working a) first propogate errors back
 """
@@ -20,17 +19,6 @@ class Network:
             for j in range(sizes[layer]):
                 for k in range(sizes[layer-1]):
                     self.topology[layer][j].addInput(self.topology[layer-1][k], np.random.randn(1))
-
-        """        
-        for layer in sizes:
-            self.hiddenNodes = [Node() for i in range(sizes[1])]
-            for i, j in itertools.product(self.hiddenNodes, self.inputNodes):
-                i.addInput(j, np.random.randn(1))
-                
-        self.outputNodes  = [Node() for i in range(sizes[-1])]
-        for i, j in itertools.product(self.outputNodes, self.hiddenNodes):
-            i.addInput(j, np.random.randn(1))
-        """
         
     # input must be a vector of length sizes[0]
     # could be a numpy (n,1) array?
@@ -44,12 +32,13 @@ class Node:
         self.input = 0
         self.activation = 0
         self.inputs = []
+        self.bias = np.random.randn(1)
         
     def addInput(self, otherNode, weight):
         self.inputs.append((otherNode, weight))
         
     def feedforward(self, inputVector):
-        self.activation = 0
+        self.activation = self.bias
         for i in self.inputs:
             self.activation += i[0].feedforward(inputVector)*i[1]
 
