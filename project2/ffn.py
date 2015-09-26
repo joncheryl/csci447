@@ -1,54 +1,153 @@
-""" 
-2) make a little test data
-3) get backprop working a) first propogate errors back
-"""
+'''
+still need to get biases to learn
+'''
 
 import numpy as np
 import itertools
+import math
 
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+def dsigmoid(x):
+    return math.exp(-x)/(1+math.exp(-x))**2
+    
 class Network:
 
-    def __init__(self, sizes):
-        self.num_layers = len(sizes)
+    def __init__(self, sizes, learningRate):
         self.sizes = sizes
-
+        self.a = learningRate
+        
         # Build network topology
-        self.topology = [[inputNode(i) for i in range(sizes[0])]]
-        for layer in range(len(sizes))[1:]:
-            self.topology.append( [Node() for j in range(sizes[layer])] )
+        self.nodes = [[inputNode(i) for i in range(sizes[0])]]
+        self.edges = []
+
+        for layer in range(len(sizes))[1:-1]:
+            self.nodes.append( [Node() for j in range(sizes[layer])] )
             for j in range(sizes[layer]):
                 for k in range(sizes[layer-1]):
-                    self.topology[layer][j].addInput(self.topology[layer-1][k], np.random.randn(1))
+                    self.connect(self.nodes[layer-1][k], self.nodes[layer][j], np.random.randn(1))
+
+        self.nodes.append([outputNode(i) for i in range(sizes[-1])])
+        for j in range(sizes[-1]):
+            for k in range(sizes[-2]):
+                self.connect(self.nodes[-2][k], self.nodes[-1][j], np.random.randn(1))
         
+    def connect(self, upstream, downstream, weight):
+        connector = Edge(upstream, downstream, weight, self.a)
+        self.edges += [connector]
+        upstream.addOutput(connector)
+        downstream.addInput(connector)
+                    
     # input must be a vector of length sizes[0]
     # could be a numpy (n,1) array?
     def feedforward(self, inputVector):
-        output = [i.feedforward(inputVector) for i in self.topology[-1]]
+        output = [i.feedforward(inputVector) for i in self.nodes[-1]]
         return output
 
+    def backProp(self, inputVector, target):
+        self.feedforward(inputVector)
+        for inputNode in self.nodes[0]:
+            for edge in inputNode.outputs:
+                edge.down.backProp(target)
+
+    def learn(self, inputVector, target):
+        self.backProp(inputVector, target)
+        for edge in self.edges:
+            edge.weight -= edge.a * edge.down.delta * edge.up.output
+        
+class Edge:
+    def __init__(self, upstream, downstream, weight, learningRate):
+        self.up = upstream
+        self.down = downstream
+        self.weight = weight
+        self.a = learningRate
+
+    def getOutput(self, inputVector):
+        return self.up.feedforward(inputVector) * self.weight
+        
+    def getError(self):
+        error = 0
+        return error
+                           
 class Node:
 
     def __init__(self):
-        self.input = 0
-        self.activation = 0
+        self.netInput = 0
+        self.output = 0
+        # weights may need to be stored in upstream node for learning
         self.inputs = []
+        self.outputs = []
         self.bias = np.random.randn(1)
+
+        self.delta = 0
+        self.expectedOutput = 0
         
-    def addInput(self, otherNode, weight):
-        self.inputs.append((otherNode, weight))
+    def addInput(self, edge):
+        self.inputs.append(edge)
+
+    def addOutput(self, edge):
+        self.outputs.append(edge)
         
     def feedforward(self, inputVector):
-        self.activation = self.bias
+        '''
+        adding zero makes it work... I have no idea why. 
+        It's like self.bias calls np.random.randn(1) everytime or something
+        '''
+        
+        self.netInput = 0 + self.bias
         for i in self.inputs:
-            self.activation += i[0].feedforward(inputVector)*i[1]
+            self.netInput += i.getOutput(inputVector)
 
-        return self.activation
+        self.output = sigmoid(self.netInput)
+        return self.output
+
+    def backProp(self, target):
+        self.delta = 0
+        for outEdge in self.outputs:
+            self.delta += outEdge.down.backProp(target) * outEdge.weight
+        self.delta *= dsigmoid(sum(inEdge.up.output for inEdge in self.inputs))
+
+        return self.delta
 
 # does this need to inheret from the Node class?
 class inputNode(Node):
 
     def __init__(self, index):
         self.index = index
+        self.output = 0
+        self.outputs = []
+
+    def addOutput(self, edge):
+        self.outputs.append(edge)
 
     def feedforward(self, inputVector):
-        return inputVector[self.index]
+        self.output = inputVector[self.index]
+        return self.output
+
+class outputNode(Node):
+
+    def __init__(self, index):
+        self.index = index
+        self.netInput = 0
+        self.inputs = []
+        self.output = 0
+        self.bias = np.random.randn(1)
+
+        self.delta = 0
+        
+    def addInput(self, edge):
+        self.inputs.append(edge)
+
+    def feedforward(self, inputVector):
+        self.netInput = 0 + self.bias
+        for i in self.inputs:
+            self.netInput += i.getOutput(inputVector)
+
+        self.output = self.netInput
+        return self.output
+
+    def backProp(self, target):
+        self.delta = (self.output - target[self.index]) * dsigmoid(sum(inEdge.up.output for inEdge in self.inputs))
+
+        return self.delta
