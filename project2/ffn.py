@@ -3,11 +3,10 @@ still need to get biases to learn
 '''
 
 import numpy as np
-import itertools
 import math
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + math.exp(-x)) if x>0 else math.exp(x) / (math.exp(x) + 1)
 
 def dsigmoid(x):
     return math.exp(-x)/(1+math.exp(-x))**2
@@ -58,9 +57,17 @@ class Network:
         
 class Edge:
     def __init__(self, upstream, downstream, weight, learningRate):
+        # upstream and downstream nodes
         self.up = upstream
         self.down = downstream
+
         self.weight = weight
+
+        '''
+        having the learning rate defined here may potentially allow for
+        different learning rates at different levels of the network. May be
+        interesting to test, time permitting
+        '''
         self.a = learningRate
 
     def getOutput(self, inputVector):
