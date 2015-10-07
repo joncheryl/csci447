@@ -6,7 +6,10 @@ import numpy as np
 import math
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x)) if x>0 else math.exp(x) / (math.exp(x) + 1)
+     if x>0:
+         return 1 / (1 + math.exp(-x))
+     else:
+         return math.exp(x) / (math.exp(x) + 1)
 
 def dsigmoid(x):
     return math.exp(-x)/(1+math.exp(-x))**2
@@ -14,6 +17,13 @@ def dsigmoid(x):
 class Network:
 
     def __init__(self, sizes, learningRate):
+
+        '''
+        Each element in sizes contains the number of nodes in each
+        respective layer. For example, if sizes was of length 3, sizes[0] would
+        be how many input nodes are specified, sizes[1] is how many nodes are
+        in the single hidden layer and sizes[2] is the number of output nodes
+        '''
         self.sizes = sizes
         self.a = learningRate
         
