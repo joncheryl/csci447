@@ -3,6 +3,8 @@ Radial Basis Function Network
 '''
 
 import numpy as np
+
+# do we need this?
 import math
 
 '''
