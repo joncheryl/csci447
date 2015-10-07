@@ -3,9 +3,31 @@ Radial Basis Function Network
 '''
 
 import numpy as np
-
+import itertools
 # do we need this?
 import math
+
+def grid(width, grain, dim):
+    '''
+    Build a mesh for training data.
+
+    Example
+    -------
+    >>> grid(2, 3, 2)
+    array([[-2., -2.],
+           [-2.,  0.],
+           [-2.,  2.],
+           [ 0., -2.],
+           [ 0.,  0.],
+           [ 0.,  2.],
+           [ 2., -2.],
+           [ 2.,  0.],
+           [ 2.,  2.]])
+    '''
+
+    oneDim = np.linspace(-width, width, grain)
+    mesh = list(itertools.product(oneDim, repeat = dim))
+    return np.asarray(mesh)
 
 '''
 k-means clustering function
@@ -19,10 +41,10 @@ def kmeans(trainSet, nCentroids, wiggleRoom):
     change = wiggleRoom + 1
 
     # initialize centers as random points in training set
-    oldCentroids = trainSet[np.random.choice(trainSet.shape[0], nCentroids, replace=False),:]
-    centroids = oldCentroids
+    centroids = trainSet[np.random.choice(trainSet.shape[0], nCentroids, replace=False),:]
+    oldCentroids = np.zeros((nCentroids, trainSet.shape[1]))
 
-    # list to hold group of each point in the training set
+    # list to hold grouping of each point in the training set
     pointGroup = np.zeros(trainSet.shape[0])
     
     while change > wiggleRoom:
@@ -34,11 +56,12 @@ def kmeans(trainSet, nCentroids, wiggleRoom):
         # find new centers
         for group in range(nCentroids):
             oldCentroids[group] = centroids[group]
-            centroids[group] = np.sum(trainSet[pointGroup == group])/sum(pointGroup == group)
+            centroids[group] = np.sum(trainSet[pointGroup == group], axis=0)/sum(pointGroup == group)
 
-        change = max(np.linalg.norm(centroids - oldCentroids))
+        change = max(np.linalg.norm(centroids - oldCentroids, axis=1))
         
     return centroids
+
 '''
 class RBF:
 
