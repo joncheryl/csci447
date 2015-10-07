@@ -4,6 +4,7 @@ Radial Basis Function Network
 
 import numpy as np
 import itertools
+import sys   # for matrix inversion check
 # do we need this?
 import math
 
@@ -29,14 +30,19 @@ def grid(width, grain, dim):
     mesh = list(itertools.product(oneDim, repeat = dim))
     return np.asarray(mesh)
 
-'''
-k-means clustering function
-trainSet is a 2d numpy array
-nCentroids is number of centers/gaussians
-wiggleRoom is convergence requirement
-'''
-
 def kmeans(trainSet, nCentroids, wiggleRoom):
+    '''
+    K-Means clustering function
+
+    Parameters
+    ----------
+    trainSet : 2-D ndarray
+        training set input values
+    nCentroids : number
+        number of centers/gaussians
+    wiggleRoom : number
+        convergence requirement
+    '''
 
     change = wiggleRoom + 1
 
@@ -62,81 +68,49 @@ def kmeans(trainSet, nCentroids, wiggleRoom):
         
     return centroids
 
-'''
-class RBF:
-
-    def __init__(self, nInput, nGaussians, nOutput, sigma):
+class rbfNetwork:
+    '''
+    Radial Basis Function Network
+    '''
+    
+    def __init__(self, nInput, nGaussians, nOutput, sigma, xStart, yStart):
         # the number of input nodes, gaussian nodes, and output nodes resp
         self.nInput = nInput
         self.nG = nGaussians
         self.nOutput = nOutput
 
-        # not sure exactly how this is being used (normalization?)
+        # normalization constant
         self.sigma = sigma
 
-        # 2d array to hold the kmeans
-        # more efficient as a list of numpy arrays?
-        self.km = np.zeros((self.nInput, self.nG))
+        # Array of k-means determined centers of Gaussians
+        self.km = np.zeros((self.nG, self.nInput))
 
+        # Matrix to hold the 'XtX matrix' for learning
+        self.xtx = np.transpose(xStart).dot(xStart)
 
+        if np.linalg.cond(self.xtx) < 1/sys.float_info.epsilon:
+            self.weight = np.linalg.inv(self.xtx).dot(np.transpose(xStart)).dot(yStart)
+        else:
+            print 'initial training data not of full rank'
         
-    # radial basis function - requires numpy arrays as input
-    def rbf(x, center):
-        distance = np.linalg.norm(x - center)
-        return np.exp(-sigma * distance**2)
+    def setupNetwork(self, trainSet, wiggle):
+        '''
+        Choose Gaussian centers.
+        Should/Could do this with xStart data.
+        Maybe this trainSet would be too big.
+        '''
+        self.km = kmeans(trainSet, self.nG, wiggle)
+        
+    def evaluate(self, inputVector):
+        distance = np.sum((inputVector - self.km)**2, axis=1)
+        gaussOut = np.exp(distance / -self.sigma)
 
-    def rbfModel(inSet, output, centers):
+        return np.dot(np.transpose(gaussOut), self.weight)
 
-        #number of observations of the input dataset
-        N = len(inSet)
-                
-        #number of variables of the input dataset
-        nCol = len(inSet[0])
+    def learn(self, trainingPoint, target):
+        '''
+        Can easily change to let target value be last dimension in
+        trainingPoint
+        '''
 
-        # 'Unsupervised' Phase of training:
-        # calculate the cluster points, mus, using kmeans
-        mus = sp.cluster.kmeans(inSet, km);
-                
-        # calculate the Euclidean distances
-        distances = (mus-mus)**2
-        distances = distances.sum(axis=-1)
-        distances = np.sqrt(distances)
-                
-        # calculate sigma
-        sigma = max(distances)/sqrt(2*centers)
-
-        # set up phi to be an empty N x K+1 matrix 
-        phi = np.zeros((N,centers+1))
-        for row in range(0,N):
-            # set to bias column to 1
-            phi[row,1] = 1
-            for col in range (0,centers):
-                # set the weights
-                phi[row,col+1] = exp(-(1/(2*sigma))*np.linalg.norm(inSet[row:]-mus[col,])**2)
-		# set the weights
-		weights = np.linalg.pinv(phi.transpose()*phi) * phi.transpose() * output
-            return ReturnVal(sigma, weights, mus)
-
-        def rbfPrediction(rbfModel, X):
-            sigma = rbfModel.sigma
-            centers = rbfModel.centers
-            weights = rbfModel.weights
-            N = X.shape[0]
-
-            prediction = np.full(N, weights[0])
-
-            for j in range(0, N):
-                for k in range (0, len(centers)):
-                    prediction[j] = prediction[j] + weights[k+1]*exp(-(1/(2*sigma))*np.linalg.norm(X[j:]-centers[k,])**2)
-            return prediction
-
-class ReturnVal(object):
-    def __init__(self, sigma, weights, centers):
-        self.sigma = sigma
-        self.weights = weights
-        self.centers = centers
-
-
-
-
-'''
+#        self.pMatrix += 
