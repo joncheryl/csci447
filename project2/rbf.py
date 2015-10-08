@@ -5,8 +5,6 @@ Radial Basis Function Network
 import numpy as np
 import itertools
 import sys   # for matrix inversion check
-# do we need this?
-import math
 
 def grid(width, grain, dim):
     '''
@@ -29,6 +27,19 @@ def grid(width, grain, dim):
     oneDim = np.linspace(-width, width, grain)
     mesh = list(itertools.product(oneDim, repeat = dim))
     return np.asarray(mesh)
+
+def rosen(x):
+     '''
+     Rosenbrock function
+     '''
+     x = x.T
+     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
+     
+def mse(approx, actual):
+    '''
+    Mean Squared Error
+    '''
+    return sum(np.square(actual-approx))/len(actual)
 
 def kmeans(trainSet, nCentroids, wiggleRoom):
     '''
@@ -65,7 +76,7 @@ def kmeans(trainSet, nCentroids, wiggleRoom):
             centroids[group] = np.sum(trainSet[pointGroup == group], axis=0)/sum(pointGroup == group)
 
         change = max(np.linalg.norm(centroids - oldCentroids, axis=1))
-        
+
     return centroids
 
 class rbfNetwork:
@@ -73,7 +84,7 @@ class rbfNetwork:
     Radial Basis Function Network
     '''
     
-    def __init__(self, nInput, nGaussians, nOutput, sigma, xStart, yStart):
+    def __init__(self, nInput, nGaussians, nOutput, sigma):
         # the number of input nodes, gaussian nodes, and output nodes resp
         self.nInput = nInput
         self.nG = nGaussians
@@ -85,32 +96,60 @@ class rbfNetwork:
         # Array of k-means determined centers of Gaussians
         self.km = np.zeros((self.nG, self.nInput))
 
-        # Matrix to hold the 'XtX matrix' for learning
-        self.xtx = np.transpose(xStart).dot(xStart)
+        self.gaussVec = np.zeros(self.nG)
+        
+    def setupNetwork(self, xStart, yStart, wiggle):
+        '''
+        Setup the network so it has all the elements needed to learn via 
+        Recurive Least Squares.
+        1) Choose Gaussian centers
+        2) Initialize the (xTx)^-1 like matrix and weight matrix.
+        '''
 
-        if np.linalg.cond(self.xtx) < 1/sys.float_info.epsilon:
-            self.weight = np.linalg.inv(self.xtx).dot(np.transpose(xStart)).dot(yStart)
+        # K-means clustering
+        self.km = kmeans(xStart, self.nG, wiggle)
+
+        # Calculate the outputs from each Gaussian node for every point in
+        # the initial training set
+        phi = np.array([self.rbfOutputVector(x) for x in xStart])
+
+        # Check to make sure that the resulting system has lin-ind columns
+        if np.linalg.cond(np.dot(phi.T, phi)) < 1/sys.float_info.epsilon:
+            self.pTpInv = np.linalg.inv(np.dot(phi.T, phi))
+            self.weight = self.pTpInv.dot(phi.T).dot(yStart)            
         else:
-            print 'initial training data not of full rank'
-        
-    def setupNetwork(self, trainSet, wiggle):
-        '''
-        Choose Gaussian centers.
-        Should/Could do this with xStart data.
-        Maybe this trainSet would be too big.
-        '''
-        self.km = kmeans(trainSet, self.nG, wiggle)
-        
-    def evaluate(self, inputVector):
-        distance = np.sum((inputVector - self.km)**2, axis=1)
-        gaussOut = np.exp(distance / -self.sigma)
+            print 'Training data not sufficient for making initial weights :('
 
-        return np.dot(np.transpose(gaussOut), self.weight)
+    def rbfOutputVector(self, inputVector):
+        '''
+        Computes output values for each Gaussian node
+        '''
+        distance = np.sum((inputVector - self.km)**2, axis=1)
+        return np.exp(distance / -self.sigma)
+
+    def evaluate(self, inputVector):
+        '''
+        Computes predicted output
+        '''
+        gaussOut = self.rbfOutputVector(inputVector)
+        return np.dot(self.weight, gaussOut)
 
     def learn(self, trainingPoint, target):
         '''
-        Can easily change to let target value be last dimension in
-        trainingPoint
+        Recursive Least Squares update to weights
         '''
 
-#        self.pMatrix += 
+        # Calculate a few items that are needed for the formula
+        gaussVec = self.rbfOutputVector(trainingPoint)
+        denom = 1 + gaussVec.dot(self.pTpInv).dot(gaussVec)
+        error = np.dot(self.weight, gaussVec) - target
+
+#        print self.weight
+#        print trainingPoint, denom
+
+        # Update weights
+        self.weight -= (self.pTpInv.dot(gaussVec).dot(error)) / denom
+
+        # Update pTp inverse matrix
+        self.pTpInv -= self.pTpInv.dot(np.outer(gaussVec,gaussVec)).dot(self.pTpInv) / denom
+
