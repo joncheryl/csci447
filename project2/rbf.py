@@ -34,7 +34,7 @@ def rosen(x):
      '''
      x = x.T
      return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
-     
+
 def mse(approx, actual):
     '''
     Mean Squared Error
@@ -84,31 +84,33 @@ class rbfNetwork:
     Radial Basis Function Network
     '''
     
-    def __init__(self, nInput, nGaussians, nOutput, sigma):
+    def __init__(self, nInput, nGaussians, nOutput):
         # the number of input nodes, gaussian nodes, and output nodes resp
         self.nInput = nInput
         self.nG = nGaussians
         self.nOutput = nOutput
 
-        # normalization constant
-        self.sigma = sigma
-
         # Array of k-means determined centers of Gaussians
         self.km = np.zeros((self.nG, self.nInput))
 
-        self.gaussVec = np.zeros(self.nG)
+        self.gaussVec = np.zeros(self.nG+1)
         
-    def setupNetwork(self, xStart, yStart, wiggle):
+    def setupNetwork(self, xStart, yStart, betaDeal, wiggle):
         '''
         Setup the network so it has all the elements needed to learn via 
         Recurive Least Squares.
         1) Choose Gaussian centers
-        2) Initialize the (xTx)^-1 like matrix and weight matrix.
+        2) Determine appropriate sigma
+        3) Initialize the (xTx)^-1 like matrix and weight matrix.
         '''
 
         # K-means clustering
         self.km = kmeans(xStart, self.nG, wiggle)
 
+        # variance value estimate
+        oneDimDist = ((max(xStart.T[0]) - min(xStart.T[0])) / self.nG**(1./self.nInput))**2
+        self.beta = self.nG**(betaDeal) / (oneDimDist * self.nInput)
+        
         # Calculate the outputs from each Gaussian node for every point in
         # the initial training set
         phi = np.array([self.rbfOutputVector(x) for x in xStart])
@@ -120,12 +122,17 @@ class rbfNetwork:
         else:
             print 'Training data not sufficient for making initial weights :('
 
+        # Then do it anyway
+        self.pTpInv = np.linalg.inv(np.dot(phi.T, phi))
+        self.weight = self.pTpInv.dot(phi.T).dot(yStart)
+        
     def rbfOutputVector(self, inputVector):
         '''
         Computes output values for each Gaussian node
+        a 1 is appended for the intercept term
         '''
         distance = np.sum((inputVector - self.km)**2, axis=1)
-        return np.exp(distance / -self.sigma)
+        return np.append(1., np.exp(-self.beta * distance))
 
     def evaluate(self, inputVector):
         '''
@@ -144,12 +151,27 @@ class rbfNetwork:
         denom = 1 + gaussVec.dot(self.pTpInv).dot(gaussVec)
         error = np.dot(self.weight, gaussVec) - target
 
-#        print self.weight
-#        print trainingPoint, denom
-
         # Update weights
         self.weight -= (self.pTpInv.dot(gaussVec).dot(error)) / denom
 
         # Update pTp inverse matrix
         self.pTpInv -= self.pTpInv.dot(np.outer(gaussVec,gaussVec)).dot(self.pTpInv) / denom
 
+'''
+Test to see if working
+'''
+train = grid(1, 11, 2)
+trainY = rosen(train)
+trainBig = grid(1, 21, 2)
+trainBigY = rosen(trainBig)
+
+test = rbfNetwork(2, 100, 1)
+test.setupNetwork(train, trainY, .1, .1)
+
+resultsUntrained = np.array([test.evaluate(x) for x in trainBig])
+mseUntrained = mse(resultsUntrained, trainBigY)
+
+for i in range(len(trainBigY)): test.learn(trainBig[i],trainBigY[i])
+
+resultsTrained =  np.array([test.evaluate(x) for x in trainBig])
+mseTrained = mse(resultsTrained, trainBigY)
