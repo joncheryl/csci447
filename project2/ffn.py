@@ -20,10 +20,9 @@ def dsigmoid(x):
 class ffNetwork:
 
     def __init__(self, sizes, learningRate):
-
         '''
         Each element in sizes contains the number of nodes in each
-        respective layer. For example, if sizes was of length 3, sizes[0] would
+        respective layer. For example, if sizes is of length 3, sizes[0] would
         be how many input nodes are specified, sizes[1] is how many nodes are
         in the single hidden layer and sizes[2] is the number of output nodes
         '''
@@ -68,6 +67,7 @@ class ffNetwork:
 
         # Update weights
         for edge in self.edges:
+            # w = w -learningRate * dEdOutput * dOutputdInput * dInputdWeight
             edge.weight -= edge.a * edge.down.delta * edge.up.output
 
     def getWeights(self):
@@ -128,9 +128,13 @@ class Node:
 
     def backProp(self, target):
         self.delta = 0
+
+        # dEdOutput
         for outEdge in self.outputs:
             self.delta += outEdge.down.backProp(target) * outEdge.weight
-        self.delta *= dsigmoid(sum(inEdge.up.output for inEdge in self.inputs))
+
+        # dOutputdInput
+        self.delta *= dsigmoid(self.netInput)
 
         return self.delta
 
@@ -172,8 +176,10 @@ class outputNode(Node):
         return self.output[0]
 
     def backProp(self, target):
-        self.delta = (self.output - target[self.index]) * dsigmoid(sum(inEdge.up.output for inEdge in self.inputs))
+        # dEdOutput
+        self.delta = (self.output - target[self.index])
 
+        # dOutputdInput = 1 so nothing to multiply
         return self.delta
 
 
@@ -216,6 +222,7 @@ def mse(approx, actual):
     '''
     return sum(np.square(actual-approx))/len(actual)
 
+'''
 train = grid(1, 11, 2)
 trainY = rosen(train)
 trainBig = grid(1, 21, 2)
@@ -255,3 +262,4 @@ for i in range(200):
      testFF.feedforward([0,0])
      testFF.feedforward([-1,.2])
 
+'''
