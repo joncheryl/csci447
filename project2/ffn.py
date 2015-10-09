@@ -3,7 +3,10 @@ still need to get biases to learn
 '''
 
 import numpy as np
+import itertools
 import math
+
+from operator import sub # for testing
 
 def sigmoid(x):
      if x>0:
@@ -14,7 +17,7 @@ def sigmoid(x):
 def dsigmoid(x):
     return math.exp(-x)/(1+math.exp(-x))**2
     
-class Network:
+class ffNetwork:
 
     def __init__(self, sizes, learningRate):
 
@@ -51,19 +54,27 @@ class Network:
     # input must be a vector of length sizes[0]
     # could be a numpy (n,1) array?
     def feedforward(self, inputVector):
-        output = [i.feedforward(inputVector) for i in self.nodes[-1]]
-        return output
+        self.output = [i.feedforward(inputVector) for i in self.nodes[-1]]
+        return self.output
 
-    def backProp(self, inputVector, target):
+    def learn(self, inputVector, target):
+        # Compute outputs for each node
         self.feedforward(inputVector)
+
+        # Backpropogate errors
         for inputNode in self.nodes[0]:
             for edge in inputNode.outputs:
                 edge.down.backProp(target)
 
-    def learn(self, inputVector, target):
-        self.backProp(inputVector, target)
+        # Update weights
         for edge in self.edges:
             edge.weight -= edge.a * edge.down.delta * edge.up.output
+
+    def getWeights(self):
+         weights=[]
+         for edge in self.edges:
+              weights.append(edge.weight[0])
+         return(weights)
         
 class Edge:
     def __init__(self, upstream, downstream, weight, learningRate):
@@ -82,10 +93,6 @@ class Edge:
 
     def getOutput(self, inputVector):
         return self.up.feedforward(inputVector) * self.weight
-        
-    def getError(self):
-        error = 0
-        return error
                            
 class Node:
 
@@ -112,7 +119,7 @@ class Node:
         It's like self.bias calls np.random.randn(1) everytime or something
         '''
         
-        self.netInput = 0 + self.bias
+        self.netInput = 0 # + self.bias
         for i in self.inputs:
             self.netInput += i.getOutput(inputVector)
 
@@ -157,14 +164,94 @@ class outputNode(Node):
         self.inputs.append(edge)
 
     def feedforward(self, inputVector):
-        self.netInput = 0 + self.bias
+        self.netInput = 0 # + self.bias
         for i in self.inputs:
             self.netInput += i.getOutput(inputVector)
 
         self.output = self.netInput
-        return self.output
+        return self.output[0]
 
     def backProp(self, target):
         self.delta = (self.output - target[self.index]) * dsigmoid(sum(inEdge.up.output for inEdge in self.inputs))
 
         return self.delta
+
+
+'''
+Test network
+'''
+
+def grid(width, grain, dim):
+    '''
+    Build a mesh for training data.
+
+    Example
+    -------
+    >>> grid(2, 3, 2)
+    array([[-2., -2.],
+           [-2.,  0.],
+           [-2.,  2.],
+           [ 0., -2.],
+           [ 0.,  0.],
+           [ 0.,  2.],
+           [ 2., -2.],
+           [ 2.,  0.],
+           [ 2.,  2.]])
+    '''
+
+    oneDim = np.linspace(-width, width, grain)
+    mesh = list(itertools.product(oneDim, repeat = dim))
+    return np.asarray(mesh)
+
+def rosen(x):
+     '''
+     Rosenbrock function
+     '''
+     x = x.T
+     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
+
+def mse(approx, actual):
+    '''
+    Mean Squared Error
+    '''
+    return sum(np.square(actual-approx))/len(actual)
+
+train = grid(1, 11, 2)
+trainY = rosen(train)
+trainBig = grid(1, 21, 2)
+trainBigY = rosen(trainBig)
+
+topology = np.array([2, 4, 4, 1])
+learningRate = .5
+nIter = 10
+tol = .0001
+
+converged = 0
+
+testFF = ffNetwork(topology, learningRate)
+for iteration in range(nIter):
+    oldWeights = testFF.getWeights()
+    for i in range(len(trainY)):
+          testFF.learn(train[i], [trainY[i]])
+    newWeights = testFF.getWeights()
+    wDiff = map(sub, newWeights, oldWeights)
+    if np.max(np.abs(wDiff)) < tol:
+        converged = iteration + 1
+        break
+
+if converged > 0:
+    print "Converged after ", converged, "iterations"
+else:
+    print "Failed to converge after", nIter, "iterations"
+
+resultsTrained = np.array([testFF.feedforward(x)[0] for x in trainBig])
+mseTrained = mse(resultsTrained, trainBigY)
+
+for i in range(200):
+     testFF.learn([1,1],[10])
+     testFF.learn([0,0],[-15])
+     testFF.learn([-1,.2],[-20])
+     testFF.feedforward([1,1])
+     testFF.feedforward([0,0])
+     testFF.feedforward([-1,.2])
+
