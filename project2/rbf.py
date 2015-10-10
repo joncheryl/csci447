@@ -6,41 +6,6 @@ import numpy as np
 import itertools
 import sys   # for matrix inversion check
 
-def grid(width, grain, dim):
-    '''
-    Build a mesh for training data.
-
-    Example
-    -------
-    >>> grid(2, 3, 2)
-    array([[-2., -2.],
-           [-2.,  0.],
-           [-2.,  2.],
-           [ 0., -2.],
-           [ 0.,  0.],
-           [ 0.,  2.],
-           [ 2., -2.],
-           [ 2.,  0.],
-           [ 2.,  2.]])
-    '''
-
-    oneDim = np.linspace(-width, width, grain)
-    mesh = list(itertools.product(oneDim, repeat = dim))
-    return np.asarray(mesh)
-
-def rosen(x):
-     '''
-     Rosenbrock function
-     '''
-     x = x.T
-     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
-
-def mse(approx, actual):
-    '''
-    Mean Squared Error
-    '''
-    return sum(np.square(actual-approx))/len(actual)
-
 def kmeans(trainSet, nCentroids, wiggleRoom):
     '''
     K-Means clustering function
@@ -160,6 +125,42 @@ class rbfNetwork:
 '''
 Test to see if working
 '''
+
+def grid(width, grain, dim):
+    '''
+    Build a mesh for training data.
+
+    Example
+    -------
+    >>> grid(2, 3, 2)
+    array([[-2., -2.],
+           [-2.,  0.],
+           [-2.,  2.],
+           [ 0., -2.],
+           [ 0.,  0.],
+           [ 0.,  2.],
+           [ 2., -2.],
+           [ 2.,  0.],
+           [ 2.,  2.]])
+    '''
+
+    oneDim = np.linspace(-width, width, grain)
+    mesh = list(itertools.product(oneDim, repeat = dim))
+    return np.asarray(mesh)
+
+def rosen(x):
+     '''
+     Rosenbrock function
+     '''
+     x = x.T
+     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
+
+def mse(approx, actual):
+    '''
+    Mean Squared Error
+    '''
+    return sum(np.square(actual-approx))/len(actual)
+
 train = grid(1, 11, 2)
 trainY = rosen(train)
 trainBig = grid(1, 21, 2)
