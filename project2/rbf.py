@@ -58,8 +58,6 @@ class rbfNetwork:
         # Array of k-means determined centers of Gaussians
         self.km = np.zeros((self.nG, self.nInput))
 
-        self.gaussVec = np.zeros(self.nG+1)
-        
     def setupNetwork(self, xStart, yStart, betaDeal, wiggle):
         '''
         Setup the network so it has all the elements needed to learn via 
@@ -69,7 +67,7 @@ class rbfNetwork:
         3) Initialize the (xTx)^-1 like matrix and weight matrix.
         '''
 
-        # K-means clustering
+        # Gaussian centers determined by k-means clustering
         self.km = kmeans(xStart, self.nG, wiggle)
 
         # variance value estimate
@@ -83,18 +81,18 @@ class rbfNetwork:
         # Check to make sure that the resulting system has lin-ind columns
         if np.linalg.cond(np.dot(phi.T, phi)) < 1/sys.float_info.epsilon:
             self.pTpInv = np.linalg.inv(np.dot(phi.T, phi))
-            self.weight = self.pTpInv.dot(phi.T).dot(yStart)            
+            self.weights = self.pTpInv.dot(phi.T).dot(yStart)            
         else:
             print 'Training data not sufficient for making initial weights :('
 
-        # Then do it anyway
+        # Then do it anyway?
         self.pTpInv = np.linalg.inv(np.dot(phi.T, phi))
-        self.weight = self.pTpInv.dot(phi.T).dot(yStart)
+        self.weights = self.pTpInv.dot(phi.T).dot(yStart)
         
     def rbfOutputVector(self, inputVector):
         '''
-        Computes output values for each Gaussian node
-        a 1 is appended for the intercept term
+        Computes output values for each Gaussian node.
+        A 1 is appended for the intercept term.
         '''
         distance = np.sum((inputVector - self.km)**2, axis=1)
         return np.append(1., np.exp(-self.beta * distance))
@@ -104,7 +102,7 @@ class rbfNetwork:
         Computes predicted output
         '''
         gaussOut = self.rbfOutputVector(inputVector)
-        return np.dot(self.weight, gaussOut)
+        return np.dot(self.weights, gaussOut)
 
     def learn(self, trainingPoint, target):
         '''
@@ -114,65 +112,10 @@ class rbfNetwork:
         # Calculate a few items that are needed for the formula
         gaussVec = self.rbfOutputVector(trainingPoint)
         denom = 1 + gaussVec.dot(self.pTpInv).dot(gaussVec)
-        error = np.dot(self.weight, gaussVec) - target
+        error = np.dot(self.weights, gaussVec) - target
 
         # Update weights
-        self.weight -= (self.pTpInv.dot(gaussVec).dot(error)) / denom
+        self.weights -= (self.pTpInv.dot(gaussVec).dot(error)) / denom
 
         # Update pTp inverse matrix
         self.pTpInv -= self.pTpInv.dot(np.outer(gaussVec,gaussVec)).dot(self.pTpInv) / denom
-
-'''
-Test to see if working
-'''
-
-def grid(width, grain, dim):
-    '''
-    Build a mesh for training data.
-
-    Example
-    -------
-    >>> grid(2, 3, 2)
-    array([[-2., -2.],
-           [-2.,  0.],
-           [-2.,  2.],
-           [ 0., -2.],
-           [ 0.,  0.],
-           [ 0.,  2.],
-           [ 2., -2.],
-           [ 2.,  0.],
-           [ 2.,  2.]])
-    '''
-
-    oneDim = np.linspace(-width, width, grain)
-    mesh = list(itertools.product(oneDim, repeat = dim))
-    return np.asarray(mesh)
-
-def rosen(x):
-     '''
-     Rosenbrock function
-     '''
-     x = x.T
-     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
-
-def mse(approx, actual):
-    '''
-    Mean Squared Error
-    '''
-    return sum(np.square(actual-approx))/len(actual)
-
-train = grid(1, 11, 2)
-trainY = rosen(train)
-trainBig = grid(1, 21, 2)
-trainBigY = rosen(trainBig)
-
-test = rbfNetwork(2, 100, 1)
-test.setupNetwork(train, trainY, .1, .1)
-
-resultsUntrained = np.array([test.evaluate(x) for x in trainBig])
-mseUntrained = mse(resultsUntrained, trainBigY)
-
-for i in range(len(trainBigY)): test.learn(trainBig[i],trainBigY[i])
-
-resultsTrained =  np.array([test.evaluate(x) for x in trainBig])
-mseTrained = mse(resultsTrained, trainBigY)
