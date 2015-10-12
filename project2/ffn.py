@@ -10,13 +10,16 @@ def actFun(x, act):
         if x>0:
             return 1 / (1 + math.exp(-x))
         else:
-            return math.exp(x) / (math.exp(x) + 1)
+            return math.exp(x) / (1 + math.exp(x))
     else: # Use linear activation function
         return slope * x
 
 def dActFun(x, act):
     if act == 0: # Use sigmoid activation function
-        return math.exp(-x)/(1+math.exp(-x))**2
+        if x>0:
+            return math.exp(-x) / (1 + math.exp(-x))**2
+        else:
+            return math.exp(x) / (1 + math.exp(x))**2
     else: # Use linear activation function
         return slope
      
