@@ -9,7 +9,7 @@
 
 \begin{document}
 
-\title{League of Legends Database Project \\ Fall 2014}
+\title{CSCI 447 Project 2: Neural Networks \\ Fall 2015}
 
 \author{
   \IEEEauthorblockN{Brandon Fenton}
@@ -56,21 +56,51 @@ Two neural networks with different training algorithms were implemented. A feedf
 
   \subsection{Feedforward Neural Network}
   A standard FFN network consists of a sequence of $l$ layers, each consisting of $n_i$ different ``nodes''. The first layer is called the input layer and unsurprising takes as input the $d_{in}$ different attributes of the data to be modeled. Thus, $n_1 = d_{in}$. The last layer is called the output layer and also unsurprising provides the output of the network, i.e. the predicted value for the attribute to be predicted. Thus, if the dimensionality of the output space is $d_{out}$, then $n_l = d_{out}$. The other $l-2$ layers inbetween the input and output layers are referred to as hidden layers. Each node in hidden layer $i$ is connected with all nodes in layer $i-1$ and $i+1$. Lastly, the edges in the graph described are all unidirectional, such that if one begins at an input node, one nescissarily ends at an output done. A simple 3 layer network is presented visually in Fig. \ref{fig:exampleNetwork} where $n_1 = 4$, $n_2 = 5$, and $n_3 = 1$.
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{network.jpg}
+    \caption{Example Neural Network}
+    \label{fig:exampleNetwork}
+  \end{figure}
+
   Excluding the edges contected to the input layer, for each edge there is an associated weight. Nodes take as input the weighted sum of outputs from their upsteam nodes plus a bias term specific to each node (a node in layer $i$ is considered upstream from nodes in layers $j>i$ and a node in layer $i$ is considered downstream from nodes in layers $j<i$). In the implementation provided, weights and biases are initialized to random values. The output value of a node is the value of a network-wide specified activation function of the input to the node. A typical activation function used is the logistic function or the hyperbolic tangent function. For this project, both the logistic function and a linear activation function were implemented with the choice left up to the user. If the linear activation function is chosen a slope must be supplied.
 
     \subsubsection{Training}
-  Training for FFN networks is generally accomplished by a task often referred to as ``backpropogation''. In general terms, the error between predicted output and target output is propogated back through the network to provide information to be able to perform a gradient descent through the parameter space (the space of all possible weight and bias values).
+    Training for FFN networks is generally accomplished by a task often referred to as ``backpropogation''. In general terms, the error between predicted output and target output is propogated back through the network to provide information to be able to perform a gradient descent through the parameter space (the space of all possible weights and bias values).
   
   \subsection{Radial Basis Function Network}
+  An RBF network has the same topology as a FFN network except there is only one hidden layer. RBF networks are also unidirection. The graphic in Fig. \ref{fig:exampleNetwork} also represents an RBF network topoloy.
 
-    \subsubsection{Training}
+  The defining difference between the two networks is that RBF networks use \textit{radial basis functions} for activation functions. A radial basis function, $\phi(\mathbf{x}, \mathbf{c})$, is a function solely of the distance between points $\mathbf{x}$ and $\mathbf{c}$: $||\mathbf{x} - \mathbf{c}||$. A typical choice for the basis function (and the one chosen for the provided implementation) is a Gaussian basis function:
+  $$
+  \phi(\mathbf{x}) = e^{-\beta ||\mathbf{x} - \mathbf{c}||^2}
+  $$
+  where $\beta$ is a user-specified, tunable parameter.
+  For each node $i$ in the hidden layer (referred to as ``Gaussian Nodes'' or simply ``Gaussians'') the centers of the basis function, $\mathbf{c}_i$ are different.
+
+  The only edges in the network that have associated weights $w_i$ are the edges connecting the hidden layer to the output layer. While not necessary, a bias term $b$ is included in the authors implementation. Thus, the predicted output $o$, given input $\mathbf{x}$, of an RBF network with $k$ Gaussians and one dimensional output is
+  $$
+  o = \sum_{i=1}^k w_i e^{-\beta ||\mathbf{x} - \mathbf{c_i}||^2} + b.
+  $$
   
+    \subsubsection{Training}
+    The training process for RBF networks is customarily divided into two parts. The first step is choosing appropriate centers for the radial basis functions of the Gaussian nodes. Often this is performed by using the $k$-means clustering algorithm. Such an algorithm is used by the authors for this step.
+
+    Once the Gaussian centers have been chosen, the model weights and bias may be learned. This may be accomplished by a variety of methods. The two most common being gradient descent and ordinary least-squares minimization. Given a training data set $D = \{\mathbf{x}_j\}_{j=}^N$, there is a closed form expression given by a generalized inverse of an appropriately organized matrix of the training data. Computation of matrix inverses is, however, computationally laborious and is not well suited for very large RBF networks.
+
+    Recursive least squares provides a more efficient method that allows for continual learning and updating of the weights and bias. Given one training point, an update to the weights and bias can be expressed in terms of scalar and matrix multiplication (technically a matrix inverse is computed but is an inverse of a 1 by 1 matrix (division)). Thus, the only step at which a matrix inverse is required to compute is at the initialization step when starting values of weights and bias are chosen. While it is possible to randomly assign weights, this would be providing irremovable error into parameter estimation that would be impossible to remove. The method the authors chose was as follows: given an RBF network with $k$ Gaussians, compute the least-squares minimizing weights and bias for $k$ training points (using the generalized inverse). Then iteratively update the weights and bias by recursive least squares.
+    
 \section{Experimental Approach}
   \subsection{Tuning}
-
+  Searching a grid for all possible tuning parameters proved to be impractical given the slow speed of the learning process of the various algorithms. A less intensive approach was taken that randomly sampled from the tuning parameter space \cite{bergstra}.
+  
   \subsection{$k$-fold Cross-Validation}
 
 \section{Results}
+  \subsection{Model Performance}
+
+  \subsection{Convergence}
   
 \begin{table}[H]
   \caption{Relation Sizes}
@@ -91,14 +121,6 @@ Two neural networks with different training algorithms were implemented. A feedf
   \end{minipage} }
 \end{table}
 
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{network.jpg}
-  \caption{Example Neural Network}
-  \label{fig:exampleNetwork}
-\end{figure}
-
 \section{Conclusion}
 
 
@@ -107,6 +129,8 @@ Two neural networks with different training algorithms were implemented. A feedf
 \bibitem{rumelhart}
   Rumelhart, D. E., Hinton, G. E., and Williams, R. J. (1986). Learning internal representations by error propagation. Parallel Distributed Processing: Explorations in the Microstructure of Cognition. Volume 1: Foundations Volume 1: Foundations, MIT Press, Cambridge, MA.
 
+\bibitem{bergstra}
+  Bergstra, J., Bengio, Y. (2012). Random Search for Hyper-Parameter Optimization. Journal of Machine Learning Research. Volume 13. 281 - 305.
 \end{thebibliography}
 
 \end{document}
