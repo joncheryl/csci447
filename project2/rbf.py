@@ -115,7 +115,7 @@ class rbfNetwork:
         error = np.dot(self.weights, gaussVec) - target
 
         # Update weights
-        self.weights -= (self.pTpInv.dot(gaussVec).dot(error)) / denom
+        self.weights -= (self.pTpInv.dot(gaussVec) * (error)) / denom
 
         # Update pTp inverse matrix
         self.pTpInv -= self.pTpInv.dot(np.outer(gaussVec,gaussVec)).dot(self.pTpInv) / denom
