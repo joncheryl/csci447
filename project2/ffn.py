@@ -5,27 +5,30 @@ Feedforward Neural Network
 import numpy as np
 import math
 
+
 def actFun(x, act):
-    if act == 0: # Use sigmoid activation function
-        if x>0:
+    if act == 0:  # Use sigmoid activation function
+        if x > 0:
             return 1 / (1 + math.exp(-x))
         else:
             return math.exp(x) / (1 + math.exp(x))
-    else: # Use linear activation function
-        return slope * x
+    else:  # Use linear activation function
+        return act * x
+
 
 def dActFun(x, act):
-    if act == 0: # Use sigmoid activation function
-        if x>0:
+    if act == 0:  # Use sigmoid activation function
+        if x > 0:
             return math.exp(-x) / (1 + math.exp(-x))**2
         else:
             return math.exp(x) / (1 + math.exp(x))**2
-    else: # Use linear activation function
-        return slope
-     
+    else:  # Use linear activation function
+        return act
+
+
 class ffNetwork:
 
-    def __init__(self, sizes, learningRate, momentum = 0, act = 0):
+    def __init__(self, sizes, learningRate, momentum=0, act=0):
         '''
         Each element in sizes contains the number of nodes in each
         respective layer. For example, if sizes is of length 3, sizes[0] would
@@ -50,7 +53,7 @@ class ffNetwork:
 
         # hidden layers
         for layer in range(len(sizes))[1:-1]:
-            self.nodes.append( [Node(act) for j in range(sizes[layer])] )
+            self.nodes.append([Node(act) for j in range(sizes[layer])])
             for j in range(sizes[layer]):
                 for k in range(sizes[layer-1]):
                     self.connect(self.nodes[layer-1][k], self.nodes[layer][j], np.random.randn(1))
@@ -92,7 +95,7 @@ class ffNetwork:
 
         # Update weights
         for edge in self.edges:
-            #w = w - learningRate * (dEdOutput * dOutputdInput) * dInputdWeight
+            # w = w- learningRate * (dEdOutput * dOutputdInput) * dInputdWeight
             weightChange = edge.a * edge.down.delta * edge.up.output
             edge.weight -= weightChange - edge.oldWeightChange * self.mom
             edge.oldWeightChange = weightChange
@@ -101,25 +104,26 @@ class ffNetwork:
         for layer in range(len(self.sizes))[1:]:
             for node in self.nodes[layer]:
                 # w_b = w_b - learningRate * (dEdOutput * dOutputdInput) * 1
-                biasChange = node.delta
-                node.bias -= self.a * biasChange - node.oldBiasChange * self.mom
-                node.oldBiasChange = biasChange
+                biasChnge = node.delta
+                node.bias -= self.a * biasChnge - node.oldBiasChange * self.mom
+                node.oldBiasChange = biasChnge
 
     #
-    # Methods to obtain weights and biases for averaging during the training process
+    # Methods to obtain weights and biases for averaging over training process
     #
     def getWeights(self):
-        weights=[]
+        weights = []
         for edge in self.edges:
             weights.append(edge.weight[0])
         return(weights)
-    
-    def getBiases(self):
-        biases=[]
+
+def getBiases(self):
+        biases = []
         for node in self.nodes:
             node.append(node.bias[0])
-        retuern(biases)
-        
+        return(biases)
+
+
 class Edge:
     def __init__(self, upstream, downstream, weight, learningRate):
         # upstream and downstream nodes
@@ -137,7 +141,8 @@ class Edge:
 
     def getOutput(self, inputVector):
         return self.up.feedforward(inputVector) * self.weight
-                           
+
+
 class Node:
     def __init__(self, act):
         self.act = act
@@ -145,17 +150,17 @@ class Node:
         self.output = 0
         self.inputs = []
         self.outputs = []
-        
+
         self.bias = np.random.randn(1)
         self.oldBiasChange = 0
         self.delta = 0
-        
+
     def addInput(self, edge):
         self.inputs.append(edge)
 
     def addOutput(self, edge):
         self.outputs.append(edge)
-        
+
     def feedforward(self, inputVector):
         self.netInput = 0 + self.bias
         for i in self.inputs:
@@ -176,6 +181,7 @@ class Node:
 
         return self.delta
 
+
 class inputNode(Node):
 
     def __init__(self, index):
@@ -190,6 +196,7 @@ class inputNode(Node):
         self.output = inputVector[self.index]
         return self.output
 
+
 class outputNode(Node):
 
     def __init__(self, index):
@@ -201,7 +208,7 @@ class outputNode(Node):
         self.bias = np.random.randn(1)
         self.oldBiasChange = 0
         self.delta = 0
-        
+
     def addInput(self, edge):
         self.inputs.append(edge)
 
