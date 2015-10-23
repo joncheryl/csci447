@@ -47,6 +47,7 @@ double dActFun(double x, double act = 0)
     }
 }
 
+
 /*
  *
  * Program
@@ -54,32 +55,49 @@ double dActFun(double x, double act = 0)
  */
 int main(int argc, char** argv)
 {
-
     // number of hidden layers + 1
     int nLayers = 3;
 
     // array containing number of nodes in each layer (first and last element
     // are the number of inputs and outputs respectively.
     vec nNodes;
-    nNodes << 2 << 6 << 6 << 1 << endr ;
+    nNodes << 3 << 6 << 6 << 1 << endr ;
     
-    // weight matrices
+    // weight and bias matrices
     field<mat> W(nLayers);
+    field<vec> B(nLayers);
 
     int i;
     for(i=0; i<nLayers; i++){
 	W(i) = randn(nNodes(i+1), nNodes(i));
+	B(i) = randn(nNodes(i+1));
     }
-    
-/*    mat D;
 
+    // net input and activation vectors
+    field<vec> netInputs(nLayers);
+    field<vec> activations(nLayers+1);
+
+    // input training data
+    mat D;
     D.load("data.csv", csv_ascii);
-*/	
-    cout << W << endl;
 
-    nNodes.transform( [](double val) { return actFun(val); } );
+    // feedforward
+    vec activation = D.row(0).t();
+    activations(0) = activation;
+    vec netInput;
+
+    // possible to remove some of these intermediate containers?
+    // i.e. do i need activation below
+    for(i=0; i<nLayers; i++){
+        netInput = W(i) * activation + B(i);
+        netInputs(i) = netInput;
+	activation = netInput.transform([](double val) { return actFun(val); });
+	activations(i+1) = activation;
+    }
+
+    // backprop it
     
-    cout << nNodes << endl;
+    cout << activations <<endl;
     
     return 0;
 }
