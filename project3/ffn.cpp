@@ -7,8 +7,9 @@
 
 #include <iostream>
 #include <armadillo>
-#include <cmath>
 
+// are all these still needed?
+#include <cmath>
 #include <iterator>
 #include <vector>
 #include <algorithm>
@@ -88,45 +89,56 @@ int main(int argc, char** argv)
     mat targets;
     targets.load("data.csv", csv_ascii);
     targets = targets.cols(0, 1);
-    
-    // feedforward
-    vec activation = D.row(0).t();
-    activations(0) = activation;
-    vec netInput;
 
-    // possible to remove some of these intermediate containers?
-    // i.e. do i need activation below
-    for(i=0; i<nLayers; i++)
-    {
-        netInput = W(i) * activation + B(i);
-        netInputs(i) = netInput;
-	activation = netInput.transform([](double val) { return actFun(val); });
-	activations(i+1) = activation;
-    }
-
-    // backprop it
+    // change stuff
     field<mat> deltaW(nLayers);
     field<mat> deltaB(nLayers);
-
-    // get target value
-    vec y = targets.row(0).t();
-
-    // initialize backprop process
-    deltaB(nLayers - 1) = (activations(nLayers) - y) % netInputs(nLayers-1).transform([](double val) { return dActFun(val); });
-    deltaW(nLayers - 1) = deltaB(nLayers - 1) * activations(nLayers - 1).t();
-
-    // throw back errors
-    for(i = nLayers - 2; i >= 0; i--)
+    vec activation;
+    vec y;
+    vec netInput;
+	
+    int point;
+    for(point = 0; point < D.n_rows; point++)
     {
-	deltaB(i) = W(i + 1).t() * deltaB(i + 1) % netInputs(i).transform([](double val) { return dActFun(val); });
-	deltaW(i) = deltaB(i) * activations(i).t();
-    }
+	// feedforward
+	activation = D.row(point).t();
+	activations(0) = activation;
+
+	// possible to remove some of these intermediate containers?
+	// i.e. do i need activation below
+	for(i=0; i<nLayers; i++)
+	{
+	    netInput = W(i) * activation + B(i);
+	    netInputs(i) = netInput;
+	    activation = netInput.transform([](double val) { return actFun(val); });
+	    activations(i+1) = activation;
+	}
+
+	// backprop it
+	// get target value
+	y = targets.row(point).t();
+
+	// initialize backprop process
+	deltaB(nLayers - 1) = (activations(nLayers) - y) % netInputs(nLayers-1).transform([](double val) { return dActFun(val); });
+	deltaW(nLayers - 1) = deltaB(nLayers - 1) * activations(nLayers - 1).t();
+
+	// throw back errors
+	for(i = nLayers - 2; i >= 0; i--)
+	{
+	    deltaB(i) = W(i + 1).t() * deltaB(i + 1) % netInputs(i).transform([](double val) { return dActFun(val); });
+	    deltaW(i) = deltaB(i) * activations(i).t();
+	}
     
-    // adjust with learning rate
-    for(i = 0; i < nLayers; i++)
-    {
-	deltaW(i).transform([=](double val) { return lRate * val; });
-	deltaB(i).transform([=](double val) { return lRate * val; });
+	// adjust with learning rate
+	for(i = 0; i < nLayers; i++)
+	{
+	    deltaW(i).transform([=](double val) { return lRate * val; });
+	    deltaB(i).transform([=](double val) { return lRate * val; });
+
+	    // can we get away with -= shorthand here?
+	    W(i) = W(i) - deltaW(i);
+	    B(i) = B(i) - deltaB(i);
+	}
     }
     
     cout << deltaW <<endl;
