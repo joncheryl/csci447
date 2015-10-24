@@ -63,13 +63,19 @@ int main(int argc, char** argv)
     vec nNodes;
     nNodes << 2 << 6 << 6 << 1 << endr ;
     
-    // weight matrices
+    // weight and bias matrices
     field<mat> W(nLayers);
-
+    field<vec> B(nLayers);
     int i;
     for(i=0; i<nLayers; i++){
 	W(i) = randn(nNodes(i+1), nNodes(i));
+	B(i) = randn(nNodes(i+1));
     }
+
+    field<vec> activations(nLayers+1);
+
+    activat
+
     
 /*    mat D;
 
