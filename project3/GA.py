@@ -226,10 +226,46 @@ class population:
 
     #
     # Fitness function for problem
+    # Classification rate of agent (the variable agent is like agend ID)
     #
-    def fitness(self):
+    def fitness(self, agent):
+        # make a network that each agent represents
+        weights = self.pop[agent, :self.nEdges]
+        wVectors = [weights[i:j] for i, j in
+                    zip(self.cumW[:-1], self.cumW[1:])]
+        weights = [wVectors[i].reshape(self.topology[i + 1],
+                                       self.topology[i])
+                   for i in range(len(self.topology) - 1)]
+        biases = self.pop[agent, -self.nBiases:]
+        biases = [biases[i:j] for i, j in
+                  zip(self.cumB[:-1], self.cumB[1:])]
+        
+        # vector of classifications (0 if incorrect, 1 if correct)
+        classifications = np.zeros(self.testSet.shape[0])
+
+        # classify test points given agent
+        for i in range(self.testSet.shape[0]):
+            # feedforward
+            a = self.testSet[i, :-1]
+            
+            for w, b in zip(weights, biases):
+                a = sigmoid(np.dot(w, a) + b)
+                
+            # if correctly classified...
+            if (
+                    len(np.unique(a)) == len(a) and
+                    np.argmax(a) == self.testSet[i, -1]
+            ):
+                classifications[i] = 1
+
+        # make the fitness of agent the average classification rate
+        self.fitnesses[agent, 0] = np.mean(classifications)
+
+#        if self.DEBUG is True:
+#            print(np.mean(classifications))
+
         
 
-pt = population(10000, [9, 18, 2], "ttt_num.csv")
+pt = population(10, [9, 18, 2], "ttt_num.csv")
 print("\n Max: " + str(max(pt.fitnesses[:, 0])))
 print("\n Min: " + str(min(pt.fitnesses[:, 0])))
