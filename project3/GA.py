@@ -215,13 +215,13 @@ class population:
             z = self.pop[friends[0]] + \
                 self.F*(self.pop[friends[1]] - self.pop[friends[2]])
 
-            # combine with crossover probability
+            # combine agent with intermediate agent using crossover prob
             r = np.random.binomial(1, self.CR, self.nGenes)
             r[np.random.choice(self.nGenes, 1)] = 1  # make sure 1 gene changes
-
             y = (1 - r) * self.pop[agent] + r * z
 
-            if fitness(y) > fitness(self.pop[agent]):
+            # if better, then replace
+            if self.fitness(y) > self.fitness(self.pop[agent]):
                 self.pop[agent] = y
 
     #
@@ -269,3 +269,19 @@ class population:
 pt = population(10, [9, 18, 2], "ttt_num.csv")
 print("\n Max: " + str(max(pt.fitnesses[:, 0])))
 print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+
+'''
+#
+# diffEvo script
+#
+
+iterations = 10
+pt = population(10, [9, 18, 2], "ttt_num.csv")
+
+for i in range(iterations):
+    pt.diffEvo()
+
+print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+
+'''
