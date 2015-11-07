@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Evolve()
    t <- 0;
@@ -15,165 +14,271 @@ end;
 
 biases: 1 for each hidden, and for output
 weights: nxm matrix for n nodes going to m nodes
-
 """
 
 import numpy as np
 import pandas as pd
-import ffn
+import ffn  # is this needed?
+
 
 def mse(approx, actual):
     return sum(np.square(actual-approx))/len(actual)
-  
+
+
+def sigmoid(z):
+    return 1.0/(1.0+np.exp(-z))
+
+
 class population:
-    
-    def __init__(self, popSize, topology, method="GA", strategy="monogamy", \
-                 tdata = "ttt_num.csv"):
+    def __init__(self, popSize, topology, tdata,
+                 method="GA", strategy="monogamy"):
         self.DEBUG = True
-        self.popSize = popSize
-        self.topology = topology
-        self.lrate = 0.05
-        self.strategy = strategy
-        
-        self.nEdges = sum(self.topology * append(self.topology[1:],0))
-        self.nBiases = sum(self.topology[1:])   
-        self.nGenes = self.nEdges + self.nBiases
-        self.nSelectFrom = round(self.popSize / 2)  # N parents that reproduce?
-        self.nReproduce = round(self.nSelectFrom / 2)  # not used
-        
-        self.fitnesses = np.empty((popSize, 2))
-        
-        self.selectFit = np.empty((self.nSelectFrom,2))
-        self.selected = np.empty(self.nSelectFrom, self.nGenes)        
-        
-        self.testSet = pd.read_csv(tdata).as_matrix()        
-                
-        self.t = 0  # N of iterations of evolution?
-        
+        self.lrate = 0.05  # not used
+        self.testSet = pd.read_csv(tdata).as_matrix()
+
         # Tuning parameters
+        self.popSize = popSize
         self.mutationRate = 0.3
         self.sigmaMutation = 0.5
         self.xoverProp = 0.5
         self.repProp = 0.8
         self.strategy = strategy
-        
-        self.tol = 0.90        
+
+        self.t = 0  # N of iterations of evolution?
+        self.tol = 0.90
+
+        # topology parameters
+        self.topology = np.array(topology)
+        self.nEdges = sum(self.topology[:-1] * self.topology[1:])
+        self.nBiases = sum(self.topology[1:])
+        # to organize topology for feedforward (by layer)
+        self.nWLayer = self.topology[1:] * self.topology[:-1]
+        self.cumW = np.append([0], np.cumsum(self.nWLayer))
+        self.cumB = np.append([0], np.cumsum(topology[1:]))
+
+        # geneticy parameters
+        self.nGenes = self.nEdges + self.nBiases
+        self.nSelectFrom = round(self.popSize / 2)  # N parents that reproduce?
+        self.nReproduce = round(self.nSelectFrom / 2)  # not used
+        # do these need to be initialized?
+        self.fitnesses = np.zeros((popSize, 2))
+        self.selectFit = np.zeros((self.nSelectFrom, 2))
+        self.selected = np.zeros((self.nSelectFrom, self.nGenes))
+
+        # diffEvo parameters
+        self.CR = .5  # crossover probability (between 0 and 1)
+        self.F = 1  # differential weight (between 0 and 2)
 
         # Initialize population to be uniformly randomly distributed
-        a = 0
-        b = 1.5
-        self.pop = np.random.uniform(a, b, size = (self.popSize, self.nGenes))
-        # remove genPop() function 
-        #self.genPop()
+        self.leftEndpoint = -1
+        self.rightEndpoint = 1
+        # each row represents a different agent
+        # the first nEdges elements in each row are the weights of the network
+        # the last nBiases elements in each row are the biases of the network
+        self.pop = np.random.uniform(self.leftEndpoint, self.rightEndpoint,
+                                     size=(self.popSize, self.nGenes))
 
         self.fitEval()
-    
-#    def genPop(self):
-        # Should probably generate values differently for edges and biases
-        #a = 0
-        #b = 1.5
-        #self.pop = np.random.uniform(a, b, size = (self.popSize, self.nGenes))
-        
-        #self.fitEval() 
 
+    #
+    # Evaluate fitness of population
+    #
     def fitEval(self):
-        if self.DEBUG == True:
-            print self.t
+        if self.DEBUG is True:
+            print(self.t)
+
+        # compute fitness of each agent in population
         for agent in range(self.popSize):
+            # make a network that each agent represents
             weights = self.pop[agent, :self.nEdges]
+            wVectors = [weights[i:j] for i, j in
+                        zip(self.cumW[:-1], self.cumW[1:])]
+            weights = [wVectors[i].reshape(self.topology[i + 1],
+                                           self.topology[i])
+                       for i in range(len(self.topology) - 1)]
             biases = self.pop[agent, -self.nBiases:]
+            biases = [biases[i:j] for i, j in
+                      zip(self.cumB[:-1], self.cumB[1:])]
 
-            ### dont need to use this old stuff if all we're gonna do is
-            ### feedforward
-            fitff = ffn.ffNetwork(self.topology, self.lrate, output="binary")
-            fitff.setWeights(weights)
-            fitff.setBiases(biases)
-            
-            classifications = np.empty(self.testSet.shape[0])
-            classifications.fill(0)
-                
-            testVal = np.empty(self.topology[-1])
-            testVal.fill(0)
+            # vector of classifications (0 if incorrect, 1 if correct)
+            classifications = np.zeros(self.testSet.shape[0])
+
+            # classify test points given agent
             for i in range(self.testSet.shape[0]):
-                testVal[self.testSet[i,-1]] = 1
-                fitff.learn(list(self.testSet[i,:(self.nEdges + self.nBiases)]), \
-                           testVal)
-                if np.argmax(fitff.getOutput()) ==  self.testSet[i,-1]:
-                   classifications[i] = 1
-            if self.DEBUG == True:
-                print mean(classifications)                
-            self.fitnesses[agent,0] = mean(classifications)
-            self.net = fitff
-        self.fitnesses[:,1] = list(range(self.popSize))
-        
-        #fitVals = (self.pop.sum(axis=1) - np.pi)**2
-        
-        # add fitness values
-            
-        #self.fitnesses[:,0] = fitVals
-        
-        # add indices
-        
-        
-        # sort (ranks are implicit after this)
-        #self.fitnesses = self.fitnesses[self.fitnesses[:,0].argsort()]
+                # feedforward
+                a = self.testSet[i, :-1]
 
-    def mutate(self):
-        mutations = np.random.binomial(1, self.mutationRate, self.selected.shape) \
-                    * np.random.normal(0, self.sigmaMutation, self.selected.shape) 
-        self.selected += mutations 
-        
-    def crossover(self, parent1, parent2):
-        # The
-        pLen = len(parent1)
-        indices = np.random.choice(pLen, size = pLen * self.xoverProp, \
-                  replace = False)
-        for j in indices:
-            swap = parent1[j]
-            parent1[j] = parent2[j]
-            parent2[j] = swap
-        return parent1, parent2
-    
+                for w, b in zip(weights, biases):
+                    a = sigmoid(np.dot(w, a) + b)
+
+                # if correctly classified...
+                if (
+                        len(np.unique(a)) == len(a) and
+                        np.argmax(a) == self.testSet[i, -1]
+                ):
+                    classifications[i] = 1
+
+#            if self.DEBUG is True:
+#                print(np.mean(classifications))
+
+            # make the fitness of agent the average classification rate
+            self.fitnesses[agent, 0] = np.mean(classifications)
+
+        # append population member ?
+        self.fitnesses[:, 1] = range(self.popSize)
+
+        # nfitVals = (self.pop.sum(axis=1) - np.pi)**2
+        # add fitness values
+        # self.fitnesses[:,0] = fitVals
+        # add indices
+        # sort (ranks are implicit after this)
+        # self.fitnesses = self.fitnesses[self.fitnesses[:,0].argsort()]
+
+    #
+    # Determine which agents are selected to reproduce
+    #
     def select(self):
-        self.selectFrom = np.random.choice(self.popSize, self.nSelectFrom, \
-                     replace=False)                 
+        # select pool of agents to be ranked
+        self.selectFrom = np.random.choice(self.popSize, self.nSelectFrom,
+                                           replace=False)
         self.selectFit = self.fitnesses[self.selectFrom]
         self.selected = self.pop[self.selectFrom]
-        
-        # Rank fitnesses
-        rankedSelectFit = self.selectFit[self.selectFit[:,0].argsort()]
 
-        # Decide who can reproduce        
-        self.rankedRepFit = rankedSelectFit[0:self.nSelectFrom * self.repProp,:]
+        # rank selected agents by fitnesses
+        rankedSelectFit = self.selectFit[self.selectFit[:, 0].argsort()]
 
-        self.bPi = np.random.permutation(self.rankedRepFit)        
-        self.breedingPool = self.pop[list(self.bPi[:,1])]
-        
-        
-        
-    def pts(self):
-        print self.testSet
-        
-    
+        # decide who can reproduce
+        nCanReproduce = self.nSelectFrom * self.repProp
+        self.rankedRepFit = rankedSelectFit[0:nCanReproduce, :]
+
+        # randomly shuffle selected agents to create breeding pool
+        self.bPi = np.random.permutation(self.rankedRepFit)
+        self.breedingPool = self.pop[list(self.bPi[:, 1])]
+
+    #
+    # Mutate selected agents in population by random amounts
+    #
+    def mutate(self):
+        muts = np.random.binomial(1, self.mutationRate, self.selected.shape)
+        muts *= np.random.normal(0, self.sigmaMutation, self.selected.shape)
+        self.selected += muts
+
     def operators(self):
         # Crossover
         if self.strategy == "monogamy":
             for i in range(int(floor(self.breedingPool.shape[0] / 2))):
                 self.breedingPool[i], self.breedingPool[i+2] =  \
                     self.crossover(self.breedingPool[i], self.breedingPool[i+2])
-            self.pop[list(pt.bPi[:,1])] = self.breedingPool 
-        
-        # Mutation
+            self.pop[list(pt.bPi[:, 1])] = self.breedingPool 
+
+        # Mutation - maybe should not be put in the operators function
         self.mutate()
-        
+
+    def crossover(self, parent1, parent2):
+        # The
+        pLen = len(parent1)
+        indices = np.random.choice(pLen, size=pLen * self.xoverProp,
+                                   replace=False)
+        for j in indices:
+            swap = parent1[j]
+            parent1[j] = parent2[j]
+            parent2[j] = swap
+        return parent1, parent2
+
     def evolve(self):
-        while max(self.fitnesses[:,0]) < self.tol:
-            print max(self.fitnesses[:,0])            
+        while max(self.fitnesses[:, 0]) < self.tol:
+            print(max(self.fitnesses[:, 0]))
             self.select()
             self.operators()
-            self.t += 1 
+            self.t += 1
             self.fitEval()
-            
-        return 
-        
-pt = population(10,[9,18,2])
+
+        return
+
+    #
+    # Differential Evolution generation step
+    # psuedo-code on wiki article
+    #
+    def diffEvo(self):
+        for agent in range(self.popSize):
+
+            # choose unique agents to generate intermediate agent
+            friends = [agent]
+            while agent in friends:
+                friends = np.random.choice(self.popSize, 3, replace=False)
+
+            # make intermediate agent
+            z = self.pop[friends[0]] + \
+                self.F*(self.pop[friends[1]] - self.pop[friends[2]])
+
+            # combine agent with intermediate agent using crossover prob
+            r = np.random.binomial(1, self.CR, self.nGenes)
+            r[np.random.choice(self.nGenes, 1)] = 1  # make sure 1 gene changes
+            y = (1 - r) * self.pop[agent] + r * z
+
+            # if better, then replace
+            fit = self.fitness(y)
+            if fit > self.fitnesses[agent, 0]:
+                self.pop[agent] = y
+                self.fitnesses[agent, 0] = fit
+
+    #
+    # Fitness function for problem
+    # Classification rate of agent (the variable agent is like agend ID)
+    #
+    def fitness(self, agentVector):
+        # make a network that each agent represents
+        weights = agentVector[:self.nEdges]
+        wVectors = [weights[i:j] for i, j in
+                    zip(self.cumW[:-1], self.cumW[1:])]
+        weights = [wVectors[i].reshape(self.topology[i + 1],
+                                       self.topology[i])
+                   for i in range(len(self.topology) - 1)]
+        biases = agentVector[-self.nBiases:]
+        biases = [biases[i:j] for i, j in
+                  zip(self.cumB[:-1], self.cumB[1:])]
+
+        # vector of classifications (0 if incorrect, 1 if correct)
+        classifications = np.zeros(self.testSet.shape[0])
+
+        # classify test points given agent
+        for i in range(self.testSet.shape[0]):
+            # feedforward
+            a = self.testSet[i, :-1]
+
+            for w, b in zip(weights, biases):
+                a = sigmoid(np.dot(w, a) + b)
+
+            # if correctly classified...
+            if (
+                    len(np.unique(a)) == len(a) and
+                    np.argmax(a) == self.testSet[i, -1]
+            ):
+                classifications[i] = 1
+
+        # make the fitness of agent the average classification rate
+        # self.fitnesses[agent, 0] = np.mean(classifications)
+        return np.mean(classifications)
+
+#
+# diffEvo script
+# I'm finding the big problems with working with these is
+# 1) the randomly begun neural nets are almost all basically aweful
+# 2) maybe we shouldn't have started with just a big matrix to represent
+#    the population. It's slow to rewrite vectors in a usable form to
+#    calculate fitnesses
+#
+
+'''
+iterations = 10
+pt = population(10, [9, 18, 2], "ttt_num.csv")
+
+for i in range(iterations):
+    print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+    print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+    print(i)
+    pt.diffEvo()
+
+print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+'''
