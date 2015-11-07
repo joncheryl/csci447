@@ -221,25 +221,27 @@ class population:
             y = (1 - r) * self.pop[agent] + r * z
 
             # if better, then replace
-            if self.fitness(y) > self.fitness(self.pop[agent]):
+            fit = self.fitness(y)
+            if fit > self.fitnesses[agent, 0]:
                 self.pop[agent] = y
+                self.fitnesses[agent, 0] = fit
 
     #
     # Fitness function for problem
     # Classification rate of agent (the variable agent is like agend ID)
     #
-    def fitness(self, agent):
+    def fitness(self, agentVector):
         # make a network that each agent represents
-        weights = self.pop[agent, :self.nEdges]
+        weights = agentVector[:self.nEdges]
         wVectors = [weights[i:j] for i, j in
                     zip(self.cumW[:-1], self.cumW[1:])]
         weights = [wVectors[i].reshape(self.topology[i + 1],
                                        self.topology[i])
                    for i in range(len(self.topology) - 1)]
-        biases = self.pop[agent, -self.nBiases:]
+        biases = agentVector[-self.nBiases:]
         biases = [biases[i:j] for i, j in
                   zip(self.cumB[:-1], self.cumB[1:])]
-        
+
         # vector of classifications (0 if incorrect, 1 if correct)
         classifications = np.zeros(self.testSet.shape[0])
 
@@ -247,10 +249,10 @@ class population:
         for i in range(self.testSet.shape[0]):
             # feedforward
             a = self.testSet[i, :-1]
-            
+
             for w, b in zip(weights, biases):
                 a = sigmoid(np.dot(w, a) + b)
-                
+
             # if correctly classified...
             if (
                     len(np.unique(a)) == len(a) and
@@ -259,29 +261,28 @@ class population:
                 classifications[i] = 1
 
         # make the fitness of agent the average classification rate
-        self.fitnesses[agent, 0] = np.mean(classifications)
+        # self.fitnesses[agent, 0] = np.mean(classifications)
+        return np.mean(classifications)
 
-#        if self.DEBUG is True:
-#            print(np.mean(classifications))
-
-        
-
-pt = population(10, [9, 18, 2], "ttt_num.csv")
-print("\n Max: " + str(max(pt.fitnesses[:, 0])))
-print("\n Min: " + str(min(pt.fitnesses[:, 0])))
-
-'''
 #
 # diffEvo script
+# I'm finding the big problems with working with these is
+# 1) the randomly begun neural nets are almost all basically aweful
+# 2) maybe we shouldn't have started with just a big matrix to represent
+#    the population. It's slow to rewrite vectors in a usable form to
+#    calculate fitnesses
 #
 
-iterations = 10
+'''
+iterations = 100
 pt = population(10, [9, 18, 2], "ttt_num.csv")
 
 for i in range(iterations):
+    print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+    print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+    print(i)
     pt.diffEvo()
 
 print("\n Max: " + str(max(pt.fitnesses[:, 0])))
 print("\n Min: " + str(min(pt.fitnesses[:, 0])))
-
 '''
