@@ -18,7 +18,6 @@ weights: nxm matrix for n nodes going to m nodes
 
 import numpy as np
 import pandas as pd
-import ffn  # is this needed?
 
 
 def mse(approx, actual):
@@ -38,8 +37,8 @@ class population:
 
         # Tuning parameters
         self.popSize = popSize
-        self.mutationRate = 0.3
-        self.sigmaMutation = 0.5
+        self.mutationRate = 0.7
+        self.sigmaMutation = .5
         self.xoverProp = 0.5
         self.repProp = 0.8
         self.strategy = strategy
@@ -65,18 +64,23 @@ class population:
         self.selectFit = np.zeros((self.nSelectFrom, 2))
         self.selected = np.zeros((self.nSelectFrom, self.nGenes))
 
+        # EvoStrat parameters and attributes
+        self.mu = round(self.popSize / 2)
+        self.lamb = round(self.popSize)
+        self.rho = self.mu
+
         # diffEvo parameters
         self.CR = .5  # crossover probability (between 0 and 1)
         self.F = 1  # differential weight (between 0 and 2)
 
         # Initialize population to be uniformly randomly distributed
-        self.leftEndpoint = -1
-        self.rightEndpoint = 1
+        self.leftEndpoint = 0
+        self.rightEndpoint = 2
         # each row represents a different agent
         # the first nEdges elements in each row are the weights of the network
         # the last nBiases elements in each row are the biases of the network
-        self.pop = np.random.uniform(self.leftEndpoint, self.rightEndpoint,
-                                     size=(self.popSize, self.nGenes))
+        self.pop = np.random.normal(self.leftEndpoint, self.rightEndpoint,
+                                    size=(self.popSize, self.nGenes))
 
         self.fitEval()
 
@@ -84,8 +88,6 @@ class population:
     # Evaluate fitness of population
     #
     def fitEval(self):
-        if self.DEBUG is True:
-            print(self.t)
 
         # compute fitness of each agent in population
         for agent in range(self.popSize):
@@ -118,24 +120,15 @@ class population:
                 ):
                     classifications[i] = 1
 
-#            if self.DEBUG is True:
-#                print(np.mean(classifications))
-
             # make the fitness of agent the average classification rate
             self.fitnesses[agent, 0] = np.mean(classifications)
 
         # append population member ?
         self.fitnesses[:, 1] = range(self.popSize)
 
-        # nfitVals = (self.pop.sum(axis=1) - np.pi)**2
-        # add fitness values
-        # self.fitnesses[:,0] = fitVals
-        # add indices
-        # sort (ranks are implicit after this)
-        # self.fitnesses = self.fitnesses[self.fitnesses[:,0].argsort()]
-
     #
     # Determine which agents are selected to reproduce
+    # Should be renamed 'selectFittest'
     #
     def select(self):
         # select pool of agents to be ranked
@@ -223,6 +216,43 @@ class population:
                 self.fitnesses[agent, 0] = fit
 
     #
+    # Evolution Strategy step
+    #
+    def evoStrat(self):
+        parents = np.zeros((self.rho, self.nGenes))
+        children = np.zeros((self.lamb, self.nGenes))
+        childrenFitness = np.zeros(self.lamb)
+
+        # make lamb offspring
+        for i in range(self.lamb):
+            # randomly select parents
+            parents = self.pop[np.random.choice(self.popSize,
+                                                self.rho, replace=False)]
+
+            # make recombinate offspring
+            which = np.random.randint(self.rho, size=self.nGenes)
+            children[i] = [parents[j, k] for j, k in
+                           zip(which, range(self.nGenes))]
+
+            # mutate child
+            mutations = np.random.binomial(1, self.mutationRate, self.nGenes)
+            mutations = mutations * np.random.normal(0, self.sigmaMutation,
+                                                     self.nGenes)
+            children[i] += mutations
+
+            # calculate fitness of child
+            childrenFitness[i] = self.fitness(children[i])
+
+        # select fittest from parent population and children
+        everybody = np.vstack((self.pop, children))
+        everybodyFitness = np.concatenate((self.fitnesses[:, 0],
+                                           childrenFitness))
+
+        winners = np.argpartition(-everybodyFitness, self.popSize)
+        self.pop = everybody[winners[:self.popSize]]
+        self.fitnesses[:, 0] = everybodyFitness[winners[:self.popSize]]
+
+    #
     # Fitness function for problem
     # Classification rate of agent (the variable agent is like agend ID)
     #
@@ -263,15 +293,14 @@ class population:
 #
 # diffEvo script
 # I'm finding the big problems with working with these is
-# 1) the randomly begun neural nets are almost all basically aweful
+# 1) the randomly begun neural nets are almost all aweful
 # 2) maybe we shouldn't have started with just a big matrix to represent
 #    the population. It's slow to rewrite vectors in a usable form to
 #    calculate fitnesses
 #
-
 '''
 iterations = 10
-pt = population(10, [9, 18, 2], "ttt_num.csv")
+pt = population(1000, [9, 18, 2], "ttt_num.csv")
 
 for i in range(iterations):
     print("\n Max: " + str(max(pt.fitnesses[:, 0])))
@@ -282,3 +311,19 @@ for i in range(iterations):
 print("\n Max: " + str(max(pt.fitnesses[:, 0])))
 print("\n Min: " + str(min(pt.fitnesses[:, 0])))
 '''
+
+#
+# ES script
+#
+populationSize = 40
+iterations = 10
+pt = population(populationSize, [9, 5, 2], "ttt_num.csv")
+print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+print("\n Min: " + str(min(pt.fitnesses[:, 0])))
+
+for i in range(iterations):
+    pt.evoStrat()
+
+    print(i)
+    print("\n Max: " + str(max(pt.fitnesses[:, 0])))
+    print("\n Min: " + str(min(pt.fitnesses[:, 0])))
