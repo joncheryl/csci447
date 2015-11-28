@@ -16,43 +16,52 @@ data = pd.read_csv("data/seeds_dataset.txt", sep='\t').as_matrix()
 n_points = data.shape[0]
 n_features = data.shape[1]
 
+'''
+Tunable parameters
+'''
+n_particles = 10
+n_clusters = round(data.shape[0] / 20)
+w = .72  # inertial weight
+c1 = 1.49  # acceleration constant 1
+c2 = 1.49  # acceleration constant 2
+t_max = 10  # number of iterations
+
+'''
+Initializations
+'''
 # figure out domain for particles (cluster centers)
 mins = [min(data[:, i]) for i in range(n_features)]
 maxs = [max(data[:, i]) for i in range(n_features)]
-
-# tunable parameters
-n_particles = 10
-n_clusters = round(data.shape[0] / 20)
-w = 1  # inertial weight
-c1 = 1  # acceleration constant 1
-c2 = 1  # acceleration constant 2
-
-t_max = 100  # number of iterations
-
-# initialize swarm, assignments, distances to nearest centroid, fitnesses
 parts = np.array([[[rd.uniform(mins[i], maxs[i]) for i in range(n_features)]
                    for j in range(n_clusters)] for k in range(n_particles)])
-assigns = np.zeros((n_points, n_particles))
+
+# which cluster point j is assigned to for particle i
+assigns = np.zeros((n_particles, n_points))
+# distance of point k to centroid j from particle i
 distances = np.zeros((n_particles, n_clusters, n_points))
-fitnesses = np.zeros((n_particles))
-velocity = np.zeros((n_particles, n_clusters))
+# fitness stuff
+fitnesses = np.zeros((n_particles))  # fitness of particle i
+best_fitnesses = np.zeros((n_particles))  # local best fitnesses
+best_position = parts  # global best position (most fit position)
+# intermediate quantities for updating positions
+velocity = np.zeros((n_particles, n_clusters, n_features))
 
-best_fitnesses = np.zeros((n_particles))  # CHANGE THIS!
-best_position = parts
-
+'''
+Algorithm
+'''
 for t in range(t_max):
-    print(t)
+
     # calculate distances to centroids
     for i in range(n_particles):
         for j in range(n_clusters):
             for k in range(n_points):
                 distances[i, j, k] = la.norm(parts[i, j, :] - data[k, :])**2
 
-    # make assignments
+    # assign points to clusters for each particle
     assigns = np.array([np.argmin(distances[i, :, :], axis=0)
                         for i in range(n_particles)])
 
-    # calculate quantization error
+    # calculate quantization error (fitness of each particle)
     for i in range(n_particles):
         for j in range(n_clusters):
             temp_fit = 0
@@ -65,29 +74,22 @@ for t in range(t_max):
 
         fitnesses[i] /= n_clusters
 
-    # get local best positions
+    # update local best positions (personal best for each particle)
     for i in range(n_particles):
         if fitnesses[i] < best_fitnesses[i]:
             best_position[i] = parts[i, :, :]
+            best_fitnesses[i] = fitnesses[i]
 
-    # and global best
-    '''
-    this totally doesn't work right now
-    '''
-    global_best = argmax(fitness(best_position[i]) for i in n_particles)
+    # update global best position (best of personal bests)
+    global_best = best_position[np.argmin(best_fitnesses), :, :]
 
     # update cluster centroids for each particle
-    '''
-    I don't know the proper way to use these random components based on the
-    notation from the paper, which is not super well written
-    '''
     r1 = np.random.uniform(0, 1, n_clusters)
     r2 = np.random.uniform(0, 1, n_clusters)
-
     for i in range(n_particles):
-        for j in range(n_clusters):
-            velocity[i, j] = w * velocity[i, j] + \
-                c1 * r1[j] * (best_position[i, j, :] - parts[i, j, :]) + \
-                c2 * r2[j] * (global_best[j, :] - parts[i, j, :])
+        for k in range(n_features):
+            velocity[i, :, k] = w * velocity[i, :, k] + \
+                c1 * r1[k] * (best_position[i, :, k] - parts[i, :, k]) + \
+                c2 * r2[:] * (global_best[:, k] - parts[i, :, k])
 
         parts[i, :, :] += velocity[i, :]
