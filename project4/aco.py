@@ -1,12 +1,10 @@
 '''
-Ant Colony Optimization clustering algorithm
-Implimentation of Fuzzy c-Means Model
+Ant Colony Optimization clustering: Implimentation of Fuzzy c-Means Model
 
-Algorithm from:
-Thomas Runkler: Ant Colony Optimization of Clustering Models (2005)
+Following pseudocode from "Ant Colony Optimization of Clustering Models" by
+Thomas Runkler
 
-John Sherrill
-CSCI 447 Fall 2015
+John Sherrill - CSCI 447 Fall 2015
 '''
 
 import numpy as np
@@ -48,7 +46,7 @@ for t in range(t_max):
                  for i in range(n_clusters)]
 
     # compute objective function and potentially update
-    j_hcm = sum(sum(u_clusters[i, k] * la.norm(v_centers[i] - data[k])
+    j_hcm = sum(sum(u_clusters[i, k] * la.norm(v_centers[i] - data[k])**2
                     for k in range(n_points)) for i in range(n_clusters))
     if j_hcm_min > j_hcm:
         j_hcm_min = j_hcm
