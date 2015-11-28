@@ -18,13 +18,17 @@ n_features = data.shape[1]
 
 '''
 Tunable parameters
+The w, c1, and c2 parameters were taken from the PhD thesis of F van den Bergh
+2002. University of Pretoria. Referenced from der Merwe and Engelbrecht paper
 '''
-n_particles = 10
+t_max = 10  # number of iterations
+
+n_particles = 10  # from der Merwe nd Engelbrecht paper
 n_clusters = round(data.shape[0] / 20)
+
 w = .72  # inertial weight
 c1 = 1.49  # acceleration constant 1
 c2 = 1.49  # acceleration constant 2
-t_max = 10  # number of iterations
 
 '''
 Initializations
@@ -39,6 +43,7 @@ parts = np.array([[[rd.uniform(mins[i], maxs[i]) for i in range(n_features)]
 assigns = np.zeros((n_particles, n_points))
 # distance of point k to centroid j from particle i
 distances = np.zeros((n_particles, n_clusters, n_points))
+
 # fitness stuff
 fitnesses = np.zeros((n_particles))  # fitness of particle i
 best_fitnesses = np.zeros((n_particles))  # local best fitnesses
