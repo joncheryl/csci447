@@ -152,10 +152,18 @@ wilt = wilt_data[:, 0:-1]
 
 n_simulations = 1
 n_iterations = 10
-for i in range(n_simulations):
-    pso_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters)
-    pso_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters)
-    pso_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters)
-    pso_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters)
-    pso_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters)
+wz = .72
+c1z = 1.49
+c2z = 1.49
 
+for i in range(n_simulations):
+    pso_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters, w=wz,
+                c1=c1z, c2=c2z)
+    pso_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters, w=wz,
+                c1=c1z, c2=c2z)
+    pso_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters, w=wz,
+                c1=c1z, c2=c2z)
+    pso_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters, w=wz,
+                c1=c1z, c2=c2z)
+    pso_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters, w=wz,
+                c1=c1z, c2=c2z)
