@@ -126,7 +126,8 @@ def pso_cluster(data, t_max=1000, n_particles=10, n_clusters=3, w=.72, c1=1.49,
 
             parts[i, :, :] += velocity[i, :]
 
-    print(np.min(best_fitnesses))
+        #print(np.min(best_fitnesses))
+        return(np.min(best_fitnesses))
 
 
 # Read in data
@@ -166,30 +167,53 @@ breast = breast_data[:, 0:-1]
 ecoli = ecoli_data[:, 0:-1]
 haber = haber_data[:, 0:-1]
 
-wz = .72
+wz = 0.72
 c1z = 1.49
 c2z = 1.49
-n_simulations = 1
-n_iterations = 100
+n_simulations = 30
+n_iterations = 10
+
+bank_sims = np.zeros(n_simulations)
+wine_sims = np.zeros(n_simulations)
+iris_sims = np.zeros(n_simulations)
+seed_sims = np.zeros(n_simulations)
+wilt_sims = np.zeros(n_simulations)
+white_sims = np.zeros(n_simulations)
+red_sims = np.zeros(n_simulations)
+breast_sims = np.zeros(n_simulations)
+ecoli_sims = np.zeros(n_simulations)
+haber_sims = np.zeros(n_simulations)
 
 for i in range(n_simulations):
-    pso_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(white, t_max=n_iterations, n_clusters=white_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(red, t_max=n_iterations, n_clusters=red_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(breast, t_max=n_iterations, n_clusters=breast_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(ecoli, t_max=n_iterations, n_clusters=ecoli_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
-    pso_cluster(haber, t_max=n_iterations, n_clusters=haber_n_clusters, w=wz,
-                c1=c1z, c2=c2z)
+    bank_sims[i] = pso_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters, w=wz, c1=c1z, c2=c2z)
+    wine_sims[i] = pso_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters, w=wz, c1=c1z, c2=c2z)
+    iris_sims[i] = pso_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters, w=wz, c1=c1z, c2=c2z)
+    seed_sims[i] = pso_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters, w=wz, c1=c1z, c2=c2z)
+    wilt_sims[i] = pso_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters, w=wz, c1=c1z, c2=c2z)
+    white_sims[i] = pso_cluster(white, t_max=n_iterations, n_clusters=white_n_clusters, w=wz, c1=c1z, c2=c2z)
+    red_sims[i] = pso_cluster(red, t_max=n_iterations, n_clusters=red_n_clusters, w=wz, c1=c1z, c2=c2z)
+    breast_sims[i] = pso_cluster(breast, t_max=n_iterations, n_clusters=breast_n_clusters, w=wz, c1=c1z, c2=c2z)
+    ecoli_sims[i] = pso_cluster(ecoli, t_max=n_iterations, n_clusters=ecoli_n_clusters, w=wz, c1=c1z, c2=c2z)
+    haber_sims[i] = pso_cluster(haber, t_max=n_iterations, n_clusters=haber_n_clusters, w=wz, c1=c1z, c2=c2z)
+
+print("bank mean:", np.mean(bank_sims))
+print("wine mean:", np.mean(wine_sims))
+print("iris mean:", np.mean(iris_sims))
+print("seed mean:", np.mean(seed_sims))
+print("wilt mean:", np.mean(wilt_sims))
+print("white mean:", np.mean(white_sims))
+print("red mean:", np.mean(red_sims))
+print("breast mean:", np.mean(breast_sims))
+print("ecoli mean:", np.mean(ecoli_sims))
+print("haber mean:", np.mean(haber_sims))
+
+print("bank sd", np.std(bank_sims))
+print("wine sd", np.std(wine_sims))
+print("iris sd", np.std(iris_sims))
+print("seed sd", np.std(seed_sims))
+print("wilt sd", np.std(wilt_sims))
+print("white sd", np.std(white_sims))
+print("red sd", np.std(red_sims))
+print("breast sd", np.std(breast_sims))
+print("ecoli sd", np.std(ecoli_sims))
+print("haber sd", np.std(haber_sims))

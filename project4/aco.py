@@ -5,16 +5,6 @@ Following pseudocode from "Ant Colony Optimization of Clustering Models" by
 Thomas Runkler
 
 John Sherrill - CSCI 447 Fall 2015
-
-data = pd.read_csv("data/seeds_dataset.txt", sep='\t').as_matrix()
-
-Tunable parameters:
-
-t_max = 100  # number of iterations
-n_clusters = round(data.shape[0] / 20)
-epsilon = 0.1  # what is this? Must be non-negative
-rho = 0.5  # what is this? Must be in [0,1]
-alpha = 1.5  # what is this? Must be >= 1
 '''
 
 import numpy as np
@@ -22,8 +12,7 @@ from numpy import linalg as la
 import pandas as pd
 
 
-def aco_cluster(data, t_max=1000, n_particles=10, n_clusters=3, epsilon=0.1,
-                rho=0.5, alpha=2):
+def aco_cluster(data, t_max=1000, n_clusters=3, epsilon=0.1, rho=0.5, alpha=2):
 
     '''
     Initializations
@@ -78,8 +67,8 @@ def aco_cluster(data, t_max=1000, n_particles=10, n_clusters=3, epsilon=0.1,
             quant_error += temp_fit / sum(u_clusters[i, :])
         # average of averages
         quant_error /= n_clusters
-        print(quant_error)
 
+    return(quant_error)
 
 # Read in data
 bank_data = pd.read_csv("data/banknote.csv", header=None).as_matrix()
@@ -118,30 +107,53 @@ breast = breast_data[:, 0:-1]
 ecoli = ecoli_data[:, 0:-1]
 haber = haber_data[:, 0:-1]
 
-rhoz = 0.005  # from paper (page 1242, bottom)
-epz = 0.3  # from paper (page 1242, bottom)  .3 works best for wine
-alphaz = 1  # from paper (page 1242, bottom)
-n_simulations = 1
-n_iterations = 100
+rhoz = .1  # from paper (page 1242, bottom)  .005
+epz = .01  # from paper (page 1242, bottom)  .3 works best for wine
+alphaz = 1  # from paper (page 1242, bottom)  1
+n_simulations = 30
+n_iterations = 3
+
+bank_sims = np.zeros(n_simulations)
+wine_sims = np.zeros(n_simulations)
+iris_sims = np.zeros(n_simulations)
+seed_sims = np.zeros(n_simulations)
+wilt_sims = np.zeros(n_simulations)
+white_sims = np.zeros(n_simulations)
+red_sims = np.zeros(n_simulations)
+breast_sims = np.zeros(n_simulations)
+ecoli_sims = np.zeros(n_simulations)
+haber_sims = np.zeros(n_simulations)
 
 for i in range(n_simulations):
-    aco_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(white, t_max=n_iterations, n_clusters=white_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(red, t_max=n_iterations, n_clusters=red_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(breast, t_max=n_iterations, n_clusters=breast_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(ecoli, t_max=n_iterations, n_clusters=ecoli_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
-    aco_cluster(haber, t_max=n_iterations, n_clusters=haber_n_clusters,
-                epsilon=epz, rho=rhoz, alpha=alphaz)
+    bank_sims[i] = aco_cluster(bank, t_max=n_iterations, n_clusters=bank_n_clusters, rho=.1, epsilon=.1, alpha=1)
+    wine_sims[i] = aco_cluster(wine, t_max=n_iterations, n_clusters=wine_n_clusters, rho=.005, epsilon=.3, alpha=1)
+    iris_sims[i] = aco_cluster(iris, t_max=n_iterations, n_clusters=iris_n_clusters, rho=.1, epsilon=.5, alpha=.5)
+    seed_sims[i] = aco_cluster(seed, t_max=n_iterations, n_clusters=seed_n_clusters, rho=.1, epsilon=.8, alpha=.8)
+    wilt_sims[i] = aco_cluster(wilt, t_max=n_iterations, n_clusters=wilt_n_clusters, rho=.1, epsilon=.1, alpha=.8)
+    red_sims[i] = aco_cluster(red, t_max=n_iterations, n_clusters=red_n_clusters, rho=.001, epsilon=.2, alpha=.5)
+    white_sims[i] = aco_cluster(white, t_max=n_iterations, n_clusters=white_n_clusters, rho=.001, epsilon=.5, alpha=.5)
+    breast_sims[i] = aco_cluster(breast, t_max=n_iterations, n_clusters=breast_n_clusters, rho=.00001, epsilon=.005, alpha=.5)
+    ecoli_sims[i] = aco_cluster(ecoli, t_max=n_iterations, n_clusters=ecoli_n_clusters, rho=.01, epsilon=.1, alpha=1)
+    haber_sims[i] = aco_cluster(haber, t_max=n_iterations, n_clusters=haber_n_clusters, rho=.1, epsilon=.01, alpha=1)
+
+print("bank mean:", np.mean(bank_sims))
+print("wine mean:", np.mean(wine_sims))
+print("iris mean:", np.mean(iris_sims))
+print("seed mean:", np.mean(seed_sims))
+print("wilt mean:", np.mean(wilt_sims))
+print("white mean:", np.mean(white_sims))
+print("red mean:", np.mean(red_sims))
+print("breast mean:", np.mean(breast_sims))
+print("ecoli mean:", np.mean(ecoli_sims))
+print("haber mean:", np.mean(haber_sims))
+
+print("bank sd", np.std(bank_sims))
+print("wine sd", np.std(wine_sims))
+print("iris sd", np.std(iris_sims))
+print("seed sd", np.std(seed_sims))
+print("wilt sd", np.std(wilt_sims))
+print("white sd", np.std(white_sims))
+print("red sd", np.std(red_sims))
+print("breast sd", np.std(breast_sims))
+print("ecoli sd", np.std(ecoli_sims))
+print("haber sd", np.std(haber_sims))
