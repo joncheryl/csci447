@@ -1,0 +1,1009 @@
+Starting Competitive Learning:
+--------------------------
+--------------------------
+Bank Note Data Set
+--------------------------
+Run 1:
+Quantization Error:  11.5965092487
+2.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  12.266447456
+2.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  12.0586037163
+2.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  11.4974235951
+2.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  12.3465870646
+2.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  11.5572078162
+2.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  12.3293274368
+2.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  12.5793659936
+2.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  12.2687471983
+2.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  11.6876430395
+2.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  12.4705035961
+2.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  13.7995472727
+2.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  11.9380785495
+2.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  10.6940105182
+2.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  11.3822750552
+2.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  11.7166264966
+2.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  11.7278979375
+2.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  11.6883045423
+2.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  12.6524289329
+2.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  11.8721919543
+2.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  11.4352932333
+2.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  11.9834920174
+2.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  12.1102535359
+2.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  13.5502562072
+2.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  12.1345934399
+2.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  12.8416133678
+2.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  13.066269778
+2.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  11.8506364626
+2.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  11.8324243074
+2.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  12.3181559696
+2.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Wine Data Set
+--------------------------
+Run 1:
+Quantization Error:  124.928278205
+3.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  172.624498023
+2.0 active neurons, 1.0 dead neurons
+Run 3:
+Quantization Error:  131.565121653
+3.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  176.325473405
+3.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  132.679678272
+3.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  161.84065881
+3.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  172.840156188
+3.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  180.76154714
+3.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  138.270692492
+3.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  137.663562246
+3.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  154.773872822
+3.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  147.965527812
+3.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  178.285924679
+3.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  136.354869994
+3.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  176.725800895
+3.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  123.310924476
+3.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  148.941809163
+3.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  144.07702855
+3.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  174.91551013
+2.0 active neurons, 1.0 dead neurons
+Run 20:
+Quantization Error:  174.593585147
+3.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  178.397910611
+3.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  179.822632407
+3.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  138.481397537
+3.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  117.837356299
+3.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  117.305813684
+3.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  146.72565072
+3.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  126.242248346
+3.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  154.528936745
+3.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  105.475289552
+3.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  141.137136866
+3.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Iris Data Set
+--------------------------
+Run 1:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  0.859963620039
+3.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  1.98638620768
+3.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  1.2421222364
+3.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  1.27367506232
+3.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  1.29342
+2.0 active neurons, 1.0 dead neurons
+Run 9:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  1.20048224537
+3.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  1.30831579575
+3.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  1.15781486204
+3.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  0.855140982893
+3.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  1.30831579575
+2.0 active neurons, 1.0 dead neurons
+Run 18:
+Quantization Error:  1.29342
+2.0 active neurons, 1.0 dead neurons
+Run 19:
+Quantization Error:  1.23012920843
+3.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  1.34588649885
+2.0 active neurons, 1.0 dead neurons
+Run 21:
+Quantization Error:  1.12372469196
+3.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  1.1515728611
+3.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  1.29342
+3.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Seeds Data Set
+--------------------------
+Run 1:
+Quantization Error:  3.45330220111
+3.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  3.71932733442
+3.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  4.28236904801
+3.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  4.21185178011
+3.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  2.99223516176
+3.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  3.41598727196
+3.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  3.45385667495
+3.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  3.0539613968
+3.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  4.79470480838
+3.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  4.06478345931
+3.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  3.38727149687
+3.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  2.95004866134
+3.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  4.26841932438
+3.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  2.96333406914
+3.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  4.17725551696
+3.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  4.72174883949
+3.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  4.13620563028
+3.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  3.26678060869
+3.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  4.1986178862
+3.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  3.68375284251
+3.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  3.68792626577
+3.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  4.00163975042
+3.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  3.17697788429
+3.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  3.34901618081
+3.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  2.91507351039
+3.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  3.22000718501
+3.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  4.31954752458
+3.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  3.16931830963
+3.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  3.77942513325
+3.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  4.17672482454
+3.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Wilt Data Set
+--------------------------
+Run 1:
+Quantization Error:  171.586333691
+2.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  210.928691893
+2.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  193.079029439
+2.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  165.341786306
+2.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  170.215576718
+2.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  164.4914178
+2.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  169.818205737
+2.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  153.23341907
+2.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  171.091456153
+2.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  154.18713231
+2.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  182.386230144
+2.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  175.375869664
+2.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  184.446769133
+2.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  160.572228024
+2.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  174.418294381
+2.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  173.04165349
+2.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  159.017940616
+2.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  159.711718053
+2.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  164.432366105
+2.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  176.231658143
+2.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  176.902513697
+2.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  155.411940323
+2.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  175.539176508
+2.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  168.118702347
+2.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  171.02862825
+2.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  165.778948611
+2.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  168.208157607
+2.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  168.310040255
+2.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  212.273721215
+2.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  181.666111049
+2.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+White Data Set
+--------------------------
+Run 1:
+Quantization Error:  34.7187767137
+7.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  32.3681862487
+7.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  36.4644495744
+7.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  35.7288644067
+7.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  33.1657436155
+7.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  38.8888294543
+7.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  32.7473749211
+7.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  28.7757012331
+7.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  32.2384209038
+7.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  34.7679860035
+7.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  39.388553082
+6.0 active neurons, 1.0 dead neurons
+Run 12:
+Quantization Error:  29.9708019713
+7.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  30.2751044372
+7.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  29.4052158609
+7.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  26.3169478087
+7.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  34.3387899316
+7.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  33.0082743053
+7.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  34.482456724
+7.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  34.2124285747
+7.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  32.8604960474
+5.0 active neurons, 2.0 dead neurons
+Run 21:
+Quantization Error:  31.9952269547
+7.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  36.0378143684
+7.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  34.7383361096
+7.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  29.4686044992
+7.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  30.796437557
+7.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  34.7463299629
+7.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  40.846470633
+6.0 active neurons, 1.0 dead neurons
+Run 28:
+Quantization Error:  32.3272235646
+7.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  33.0561116777
+7.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  23.8527444604
+7.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Red Data Set
+--------------------------
+Run 1:
+Quantization Error:  14.4157736766
+6.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  21.2442403244
+6.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  19.1018395127
+6.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  21.4366787488
+6.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  18.3910280325
+6.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  13.0146467926
+6.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  13.6201177596
+5.0 active neurons, 1.0 dead neurons
+Run 8:
+Quantization Error:  18.4295435822
+6.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  19.3702231772
+6.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  16.7374268571
+6.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  13.7371632385
+6.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  17.7148198919
+6.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  19.6691207031
+6.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  16.6247070911
+6.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  28.7374558151
+6.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  20.0070674192
+6.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  16.9493935354
+5.0 active neurons, 1.0 dead neurons
+Run 18:
+Quantization Error:  15.1441179177
+6.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  16.4085473883
+5.0 active neurons, 1.0 dead neurons
+Run 20:
+Quantization Error:  16.6111056825
+6.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  16.5005717927
+6.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  17.3264593575
+6.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  18.9658932506
+6.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  19.1681305305
+6.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  17.6038658406
+6.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  21.3369241695
+5.0 active neurons, 1.0 dead neurons
+Run 27:
+Quantization Error:  20.8924549381
+6.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  15.203401165
+6.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  14.8992223849
+6.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  16.2410261695
+6.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Breast Data Set
+--------------------------
+Run 1:
+Quantization Error:  5673.9679532
+5.0 active neurons, 1.0 dead neurons
+Run 2:
+Quantization Error:  7604.52668346
+6.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  7554.48103913
+3.0 active neurons, 3.0 dead neurons
+Run 4:
+Quantization Error:  6577.62603466
+6.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  7604.52668346
+3.0 active neurons, 3.0 dead neurons
+Run 6:
+Quantization Error:  4513.95394531
+6.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  5589.31137891
+6.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  5589.23295086
+6.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  3907.3059915
+5.0 active neurons, 1.0 dead neurons
+Run 10:
+Quantization Error:  8415.6561006
+6.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  5604.93117431
+6.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  7314.21034383
+4.0 active neurons, 2.0 dead neurons
+Run 13:
+Quantization Error:  5478.28383664
+6.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  5240.92145058
+5.0 active neurons, 1.0 dead neurons
+Run 15:
+Quantization Error:  5741.49464522
+6.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  4002.83034144
+5.0 active neurons, 1.0 dead neurons
+Run 17:
+Quantization Error:  4934.58616122
+6.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  3984.73408541
+6.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  5491.8855742
+4.0 active neurons, 2.0 dead neurons
+Run 20:
+Quantization Error:  6686.94507857
+6.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  3629.90987831
+5.0 active neurons, 1.0 dead neurons
+Run 22:
+Quantization Error:  4909.80950663
+4.0 active neurons, 2.0 dead neurons
+Run 23:
+Quantization Error:  5406.77226249
+4.0 active neurons, 2.0 dead neurons
+Run 24:
+Quantization Error:  7314.21034383
+3.0 active neurons, 3.0 dead neurons
+Run 25:
+Quantization Error:  7772.58610037
+6.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  7401.94409563
+6.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  5532.03382515
+4.0 active neurons, 2.0 dead neurons
+Run 28:
+Quantization Error:  5711.34258211
+6.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  8580.94564869
+6.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  7275.13118672
+5.0 active neurons, 1.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+E. Coli Data Set
+--------------------------
+Run 1:
+Quantization Error:  0.467587900225
+8.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  0.476433258812
+8.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  0.462208735664
+8.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  0.398338207079
+8.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  0.488543332783
+8.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  0.460382870602
+8.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  0.530576886547
+8.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  0.458652085836
+8.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  0.4756970064
+8.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  0.524216927709
+8.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  0.487402092289
+8.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  0.474479545064
+8.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  0.549685935524
+8.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  0.47201160994
+8.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  0.541535933325
+8.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  0.480314851748
+8.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  0.505268509117
+8.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  0.506449703328
+8.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  0.401279459401
+8.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  0.599147482287
+8.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  0.484790226026
+8.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  0.475320199268
+8.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  0.412180082981
+8.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  0.459147248258
+8.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  0.374200564419
+8.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  0.457923486001
+8.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  0.485340858226
+8.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  0.482552700004
+8.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  0.560224861247
+7.0 active neurons, 1.0 dead neurons
+Run 30:
+Quantization Error:  0.40969520147
+8.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+--------------------------
+--------------------------
+Haberman Data Set
+--------------------------
+Run 1:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 2:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 3:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 4:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 5:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 6:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 7:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 8:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 9:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 10:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 11:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 12:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 13:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 14:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 15:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 16:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 17:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 18:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 19:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 20:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 21:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 22:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 23:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 24:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 25:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 26:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 27:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 28:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 29:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+Run 30:
+Quantization Error:  16.4934640523
+2.0 active neurons, 0.0 dead neurons
+--------------------------
+--------------------------
+
+Quantization Error:
+Data Set		Mean	SD
+Bank Note		12.108	0.634
+Wine		149.847	22.106
+Iris		1.268	0.176
+Seeds		3.700	0.539
+Wilt		172.562	13.718
+White		33.066	3.553
+Red		17.850	3.081
+Breast		6034.870	1366.565
+E. Coli		0.479	0.049
+Haberman		16.493	0.000
+
+Convergence:
+Data Set		Mean	SD
+Bank Note		2700.000	691.040
+Wine		3850.067	720.205
+Iris		4529.467	1293.001
+Seeds		3540.300	1016.639
+Wilt		2410.567	485.415
+White		15922.800	4882.846
+Red		17513.767	6489.837
+Breast		16153.300	6244.263
+E. Coli		27423.933	10766.017
+Haberman		2010.000	0.000
+
+Clusters:
+Data Set		Mean	SD
+Bank Note		2.000	0.000
+Wine		2.933	0.249
+Iris		2.867	0.340
+Seeds		3.000	0.000
+Wilt		2.000	0.000
+White		6.867	0.427
+Red		5.867	0.340
+Breast		5.167	1.035
+E. Coli		7.967	0.180
+Haberman		2.000	0.000
